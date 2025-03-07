@@ -1,0 +1,41 @@
+{% extends "elama/base.html"  %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <h1 class="text-center">
+        Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
+        Migrantes Adultos (EsPROLAMA)
+    </h1>
+
+    <h2 class="text-center mt-5">AUTOEVALUACIÓN</h2>
+
+    {% load static %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-3 text-center">
+                <p>
+                    <a class="btn btn-outline-primary" href="{% url 'elama:crear-individual' %}">TRABAJO INDIVIDUAL</a>
+                </p>
+                <div class="shadow-lg">
+                    <!--<img src="https://img.genial.ly/6372606ba56ad8001106c310/8273afd2-c207-48da-895f-b35e469858d8.jpeg"
+                         width="100%">-->
+                    <img src="{% static 'trabajo-individual.jpg' %}"
+                         alt="Imagen que muestra a un hombre escribiendo en un bloc de notas. A su derecha, tiene un portátil."
+                         width="100%">
+                </div>
+            </div>
+            <div class="col-3 text-center">
+                <p>
+                    <a class="btn btn-outline-primary disabled" href="">TRABAJO EN GRUPO</a>
+                </p>
+                <div class="shadow-lg">
+                    <!---<img src="https://img.genial.ly/6372606ba56ad8001106c310/1d7781bb-73d9-452b-a0f0-c5bcdf8007f1.jpeg"
+                         width="100%">-->
+                    <img src="{% static 'trabajo-grupo.jpg' %}"
+                         alt="Imagen que muestra la unión de cinco puños de cinco personas en señal de ser un equipo."
+                         width="100%">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

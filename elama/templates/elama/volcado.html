@@ -1,0 +1,42 @@
+{% extends "elama/base.html"  %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <h1 class="text-center">
+        Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
+        Migrantes Adultos (EsPROLAMA)
+    </h1>
+
+    <h3 class="text-center mt-5">AUTOEVALUACIÓN INDIVIDUAL</h3>
+    {% if autoevaluacion.finalizada %}
+        <h6 class="text-center text-danger">FINALIZADA</h6>
+    {% endif %}
+
+    <h3 class="bg-light border-bottom mt-5">{{ descriptor.principio.estrategia.titulo }}</h3>
+    <h4 class="mt-4">{{ descriptor.principio.titulo }}</h4>
+    {% if not descriptor.descriptor_padre %}
+        <h5 class="mt-2 ps-4">{{ descriptor.titulo }}</h5>
+        <div class="mt-2 ps-4">{{ descriptor.contenido_html|safe}}</div>
+    {% else %}
+        <h5 class="mt-2 ps-4">{{ descriptor.descriptor_padre.titulo }}</h5>
+        <h6 class="mt-2 ps-5">{{ descriptor.titulo }}</h6>
+        <div class="mt-2 ps-5">{{ descriptor.contenido_html|safe }}</div>
+    {% endif %}
+    <div class="mt-2 text-center">
+        <h6 class="mt-2">AUTOEVALUACIÓN</h6>
+        <form action="{% url 'elama:volcar-autoevaluacion' autoevaluacion.id descriptor.id %}" method="post">
+            {% csrf_token %}
+            {% for i in valores %}
+                <input type="radio" class="btn-check" name="valoracion" id="id_valoracion_{{ i }}" value="{{ i }}"
+                       autocomplete="off" {% if valoracion == i %} checked {% endif %}
+                       {% if autoevaluacion.finalizada %} disabled {% endif %}>
+                <label class="btn btn-outline-success px-5" for="id_valoracion_{{ i }}">{{ i }}</label>
+            {% endfor %}
+            <p>
+                <a class="btn btn-secondary me-4 mt-2" href="{% url 'elama:individual' autoevaluacion.id %}">Cancelar</a>
+                <button type="submit" class="btn btn-primary mt-2"
+                        {% if autoevaluacion.finalizada %} disabled {% endif %}>Asignar</button>
+            </p>
+        </form>
+    </div>
+{% endblock content %}

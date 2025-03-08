@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: esprolama_web
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+#    depends_on:
+#      - db
+#    networks:
+#      - esprolama_net
+
+#  db:
+#    image: postgres:16
+#    container_name: esprolama_postgres
+#    restart: always
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data/
+#    environment:
+#      - POSTGRES_DB=esprolama
+#      - POSTGRES_USER=<db_user>
+#      - POSTGRES_PASSWORD=<db_password>
+#    networks:
+#      - esprolama_net
+
+#volumes:
+#  postgres_data:
+#
+#networks:
+#  esprolama_net:
+#    driver: bridge

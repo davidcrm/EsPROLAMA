@@ -15,8 +15,8 @@ cd EsPROLAMA
 
 ### Ubuntu
 
-1. **Instalar Apache:**
-   <p>Ejecuta el siguiente comando para instalar Apache en tu sistema:</p>
+1. **Instalar Apache:**<br />
+   Ejecuta el siguiente comando para instalar Apache en tu sistema:
 
    ```shell
    sudo apt install apache2 -y
@@ -28,8 +28,8 @@ cd EsPROLAMA
     sudo a2enmod proxy_http
     ```
 
-3. **Reemplazar el contenido del archivo de configuración de Apache:**
-    <p>Abre el archivo `/etc/apache2/sites-available/000-default.conf` y reemplaza su contenido por el siguiente:</p>
+3. **Reemplazar el contenido del archivo de configuración de Apache:**<br />
+    Abre el archivo `/etc/apache2/sites-available/000-default.conf` y reemplaza su contenido por el siguiente:
 
     ```shell
     <VirtualHost *:80>
@@ -58,8 +58,8 @@ cd EsPROLAMA
    
 ### Windows
 
-1. **Instalar XAMPP:**
-    <p>Si aún no tienes XAMPP instalado, descárgalo e instálalo desde su [sitio web oficial](https://www.apachefriends.org/).</p>
+1. **Instalar XAMPP:**<br />
+    Si aún no tienes XAMPP instalado, descárgalo e instálalo desde su [sitio web oficial](https://www.apachefriends.org/).
 
 2. **Configurar Apache en XAMPP:**
 
@@ -90,8 +90,8 @@ cd EsPROLAMA
 3. **Reiniciar Apache:**
     <p>Después de realizar los cambios, reinicia el servicio de Apache en XAMPP desde el panel de control de XAMPP.</p>
 
-4. **Levantar los contenedores Docker:**
-    <p>Finalmente, ejecuta los siguientes comandos para iniciar los contenedores Docker en segundo plano:</p>
+4. **Levantar los contenedores Docker:**<br />
+    Finalmente, ejecuta los siguientes comandos para iniciar los contenedores Docker en segundo plano:
 
    ```bash
    docker compose up -d

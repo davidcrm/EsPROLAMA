@@ -2,7 +2,7 @@
 
 <i>**TODO: Añadir una descripción en condiciones**</i>
 
-## Setup
+## Despliegue
 
 ### Clonar el repositorio
 

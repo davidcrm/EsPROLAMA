@@ -78,6 +78,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'esprolama.wsgi.application'
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost',
+    'https://localhost',
+    'http://localhost:8000',
+    'https://localhost:8000',
+]
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -89,6 +95,16 @@ DATABASES = {
     }
 }
 
+"""
+'default': {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'esprolama',
+    'USER': '<db_user>',
+    'PASSWORD': '<db_password>',
+    'HOST': 'localhost',
+    'PORT': '5432',
+}
+"""
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -125,6 +141,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = 'media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

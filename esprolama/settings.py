@@ -85,7 +85,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://localhost:8000',
 ]
 
-# ESto es un comentario de prueba
+# ESto es un comentario de pruebas
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 

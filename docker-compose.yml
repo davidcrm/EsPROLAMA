@@ -8,27 +8,29 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-#    depends_on:
-#      - db
-#    networks:
-#      - esprolama_net
+    depends_on:
+       - db
+    networks:
+       - esprolama_net
 
-#  db:
-#    image: postgres:16
-#    container_name: esprolama_postgres
-#    restart: always
-#    volumes:
-#      - postgres_data:/var/lib/postgresql/data/
-#    environment:
-#      - POSTGRES_DB=esprolama
-#      - POSTGRES_USER=<db_user>
-#      - POSTGRES_PASSWORD=<db_password>
-#    networks:
-#      - esprolama_net
+  db:
+    image: postgres:16
+    container_name: esprolama_postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432" # TODO: Remove in production
+    environment:
+      - POSTGRES_DB=esprolama
+      - POSTGRES_USER=elama
+      - POSTGRES_PASSWORD=uhu.2024
+    networks:
+      - esprolama_net
 
-#volumes:
-#  postgres_data:
-#
-#networks:
-#  esprolama_net:
-#    driver: bridge
+volumes:
+ postgres_data:
+
+networks:
+ esprolama_net:
+   driver: bridge

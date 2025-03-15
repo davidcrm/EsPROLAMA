@@ -25,7 +25,6 @@ services:
       - POSTGRES_DB=esprolama
       - POSTGRES_USER=elama
       - POSTGRES_PASSWORD=uhu.2024
-      - POSTGRES_INITDB_ARGS=--encoding=UTF8 --lc-collate=C --lc-ctype=C
     networks:
       - esprolama_net
 

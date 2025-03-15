@@ -27,6 +27,7 @@ ENV DB_NAME=esprolama
 ENV DB_USER=elama
 ENV DB_PASSWORD=uhu.2024
 ENV DB_HOST=db
+ENV DB_PORT=5432
 
 # Iniciar la aplicación de Django
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -91,7 +91,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 DATABASES = {
    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME', 'esprolama'),
         'USER': os.getenv('DB_USER', 'elama'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'uhu.2024'),

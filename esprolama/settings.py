@@ -96,7 +96,10 @@ DATABASES = {
         'USER': os.getenv('DB_USER', 'elama'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'uhu.2024'),
         'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': '5432',
+        'PORT': os.getenv('DB_PORT', '5432'),
+        'OPTIONS': {
+            'client_encoding': 'UTF8',  # Forzar UTF-8 en la conexión
+        }
     }
 }
 

@@ -22,5 +22,11 @@ RUN rm -rf /app/.venv 2> /dev/null \
 # Exponer el puerto 8000
 EXPOSE 8000
 
+# Dar valor a las variables de entorno
+ENV DB_NAME=esprolama
+ENV DB_USER=elama
+ENV DB_PASSWORD=uhu.2024
+ENV DB_HOST=db
+
 # Iniciar la aplicación de Django
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

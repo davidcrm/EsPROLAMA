@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -91,17 +92,13 @@ CSRF_TRUSTED_ORIGINS = [
 DATABASES = {
    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'esprolama',
-        'USER': 'elama',
-        'PASSWORD': 'uhu.2024',
-        'HOST': 'db',  # Nombre del servicio de la base de datos
+        'NAME': os.getenv('DB_NAME', 'esprolama'),
+        'USER': os.getenv('DB_USER', 'elama'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'uhu.2024'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': '5432',
     }
 }
-
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

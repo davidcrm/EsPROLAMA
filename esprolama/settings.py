@@ -94,7 +94,7 @@ DATABASES = {
         'NAME': 'esprolama',
         'USER': 'elama',
         'PASSWORD': 'uhu.2024',
-        'HOST': 'localhost',
+        'HOST': 'db',  # Nombre del servicio de la base de datos
         'PORT': '5432',
     }
 }

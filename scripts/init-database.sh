@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -e
 
 echo "Esperando a que PostgreSQL inicie..."

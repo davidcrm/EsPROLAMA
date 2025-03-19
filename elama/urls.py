@@ -1,10 +1,10 @@
 from django.urls import path
-from elama.views.crear_indiviudal import crear_individual
-from elama.views.finalizar_individual import finalizar_individual
-from elama.views.individual import individual
-from elama.views.login import login
-from elama.views.main import main
-from elama.views.volcar_autoevaluacion import volcar_autoevaluacion
+from .views.crear_indiviudal import crear_individual
+from .views.finalizar_individual import finalizar_individual
+from .views.individual import individual
+from .views.login import login
+from .views.main import main
+from .views.volcar_autoevaluacion import volcar_autoevaluacion
 
 app_name = 'elama'
 urlpatterns = [

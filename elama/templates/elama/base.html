@@ -14,7 +14,7 @@
     <body>
         <nav class="navbar navbar-expand-md navbar-light bg-light px-3 mb-4 border">
             {% if user.is_authenticated %}
-                <a class="navbar-brand" href="{% url 'elama:main' %}">EsPROLAMA</a>
+                <a class="navbar-brand" href="{% url 'elama:dashboard' %}">EsPROLAMA</a>
             {% else %}
                 <a class="navbar-brand" href="{% url 'elama:login' %}">EsPROLAMA</a>
             {% endif %}

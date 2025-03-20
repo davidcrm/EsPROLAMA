@@ -1,5 +1,6 @@
 from django.urls import path
 from .views.crear_indiviudal import crear_individual
+from .views.dashboard import dashboard
 from .views.finalizar_individual import finalizar_individual
 from .views.individual import individual
 from .views.login import login
@@ -10,7 +11,9 @@ app_name = 'elama'
 urlpatterns = [
     # Página de inicio (login).
     path('', login, name="login"),
-    # Página principal (usuario autenticado).
+    # Página principal con información sobre las autoevaluaciones del usuario (usuario autenticado).
+    path('dashboard/', dashboard, name="dashboard"),
+    # Página creación de autoevaluación (individual o grupal)
     path('main/', main, name='main'),
     # Página de creación de nueva autoevaluación individual.
     path('crear-individual/', crear_individual, name='crear-individual'),

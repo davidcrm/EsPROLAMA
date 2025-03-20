@@ -14,7 +14,7 @@
                     {% csrf_token %}
                     {% bootstrap_form form %}
                     {% bootstrap_button button_type="submit" content="Iniciar sesión" %}
-                    <input type="hidden" name="next" value="{% url 'elama:main' %}"/>
+                    <input type="hidden" name="next" value="{% url 'elama:dashboard' %}"/>
                 </form>
             </div>
         </div>

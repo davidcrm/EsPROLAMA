@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('elama.urls')),
     path('users/', include('users.urls')),
+
 ]

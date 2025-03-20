@@ -1,0 +1,38 @@
+{% extends 'elama/base.html' %}
+
+{% block content %}
+     <div style="display: flex; justify-content: space-between; align-items: center">
+        <h1>CONSULTA AQUÍ TUS EVALUACIONES</h1>
+        <a href="{% url "elama:main" %}" class="btn btn-success">NUEVA EVALUACIÓN</a>
+     </div>
+
+    <div class="flex-container ">
+    <ul class="list-group">
+        {% for a in autoevaluaciones %}
+            <li class="list-group-item">
+                <div style="display: flex; justify-content: space-between">
+                     {% if a.finalizada %}
+                         <div>
+                             <h3 class="title">Autoevaluación nº{{ a.id }} <span style="color: green">&check;</span></h3>
+                             <h6 class="text-body-secondary">{{ a.fecha_hora }}</h6>
+                         </div>
+
+                        <div>
+                            <a href="{% url "elama:individual" a.id %}" class="btn btn-secondary">Ver</a>
+                        </div>
+                    {% else %}
+                         <div>
+                             <h3 class="title">Autoevaluación nº{{ a.id }}</h3>
+                             <h6 class="text-body-secondary">{{ a.fecha_hora }}</h6>
+                         </div>
+                        <div>
+                            <a href="{% url "elama:individual" a.id %}" class="btn btn-primary">Editar</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    </div>
+{% endblock content %}

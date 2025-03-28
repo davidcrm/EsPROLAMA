@@ -1,6 +1,12 @@
-# EsPROLAMA
+# EsPROLAMA[^1]
+[^1]: Evaluación y Desarrollo de Programas de Español como Lengua Adicional para Migrantes Adultos
 
-<i>**TODO: Añadir una descripción en condiciones**</i>
+**EsPROLAMA** es una herramienta diseñada para apoyar la enseñanza y el aprendizaje del español en contextos migratorios.
+
+Su objetivo es facilitar la integración lingüística y cultural de personas adultas que necesitan el español para su vida cotidiana, su trabajo y su desarrollo social. A través de estrategias de autoevaluación, materiales didácticos interactivos y enfoques comunicativos, EsPROLAMA busca ofrecer un aprendizaje flexible y adaptado a las necesidades de cada migrante. Además, proporciona recursos para docentes y facilitadores, asegurando una enseñanza efectiva y contextualizada. 
+
+Los centros encargados de impartir español como lengua  adicional para migrantes pueden autoevaluar sus competencias con esta herramienta y obtener el certificado Cervantes.
+
 
 ## Despliegue
 

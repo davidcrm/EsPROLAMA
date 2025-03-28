@@ -3,7 +3,7 @@ from .views.crear_indiviudal import crear_individual
 from .views.dashboard import dashboard
 from .views.finalizar_individual import finalizar_individual
 from .views.individual import individual
-from .views.login import login
+from .views.auth import login, sign_out
 from .views.main import main
 from .views.volcar_autoevaluacion import volcar_autoevaluacion
 
@@ -11,6 +11,8 @@ app_name = 'elama'
 urlpatterns = [
     # Página de inicio (login).
     path('', login, name="login"),
+    # Página de cierre de sesión
+    path('logout', sign_out, name="logout"),
     # Página principal con información sobre las autoevaluaciones del usuario (usuario autenticado).
     path('dashboard/', dashboard, name="dashboard"),
     # Página creación de autoevaluación (individual o grupal)

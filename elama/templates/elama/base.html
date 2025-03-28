@@ -31,7 +31,7 @@
                             <span class="navbar-text">Hola, <span style="font-weight: bold">{{ user.username }}</span>.</span>
                         </li>
                         <li class="nav-item">
-                            <form action="{% url 'users:login' %}"  class="form ms-2">
+                            <form action="{% url 'elama:logout' %}"  class="form ms-2">
                                 {% csrf_token %}
                                 {% bootstrap_button button_type="submit" content="Cerrar sesión" %}
                             </form>

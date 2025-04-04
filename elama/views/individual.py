@@ -26,21 +26,24 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
     autoevaluacion = get_object_or_404(Autoevaluacion, pk=autoevaluacion_id)
     descriptor = Descriptor.objects.prefetch_related("principio__descriptor_set").get(pk=descriptor_id)
 
-    paginacion = individual_service.paginacion(autoevaluacion=autoevaluacion, descriptor=descriptor)
+    paginacion = individual_service.paginacion(descriptor)
 
     if request.method == 'POST':
-        guardar = 'guardar' in request.POST
-
         individual_service.crear_volcado(
             data=request.POST,
             autoevaluacion=autoevaluacion,
             descriptor=descriptor
         )
 
-        if guardar:
-            return redirect('elama:individual', autoevaluacion_id=autoevaluacion.id)
+        if paginacion['ultimo_descriptor'].id != descriptor.id:
+            return redirect(
+                'elama:individual-descriptor',
+                autoevaluacion_id=autoevaluacion.id,
+                descriptor_id=paginacion['siguiente_descriptor'].id
+            )
         else:
-            return redirect('elama:individual-descriptor', autoevaluacion_id=autoevaluacion.id, descriptor_id=paginacion['siguiente_descriptor'].id)
+            return redirect('elama:individual', autoevaluacion_id=autoevaluacion.id)
+
 
     volcado = Volcado.objects.filter(
         autoevaluacion_id=autoevaluacion.id,

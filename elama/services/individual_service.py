@@ -1,21 +1,17 @@
 from typing import Optional
 
 from django.db.models import QuerySet
-from django.shortcuts import redirect
-from ..models import Principio, Descriptor, Volcado, Autoevaluacion
-from ..forms import VolcadoForm
+from elama.models import Autoevaluacion, Descriptor, Volcado
+from elama.forms import VolcadoForm
 
 
 class IndividualService:
-    def paginacion(self, autoevaluacion: Autoevaluacion, descriptor: Descriptor):
-        principios = Principio.objects.filter(
-            estrategia_id=descriptor.principio.estrategia.id,
-            descriptor__isnull=False
-        ).distinct()
+    def paginacion(self, descriptor: Descriptor):
+        descriptores = Descriptor.objects.all()
 
         # Obtener el primer y último descriptor para poder manejar el "Volver" y "Guardar" de la paginación
-        primer_descriptor = principios.first().descriptor_set.first()
-        ultimo_descriptor = principios.last().descriptor_set.last()
+        primer_descriptor = descriptores.first()
+        ultimo_descriptor = descriptores.last()
 
         if primer_descriptor.descriptor_set.count() > 0:
             primer_descriptor = self.buscar_descriptores_hijos(primer_descriptor.descriptor_set.all()).first()
@@ -23,48 +19,22 @@ class IndividualService:
         if ultimo_descriptor.descriptor_set.count() > 0:
             ultimo_descriptor = self.buscar_descriptores_hijos(ultimo_descriptor.descriptor_set.all()).last()
 
-        # Obtener el siguiente descriptor y el anterior para poder manejar el "Siguiente" y "Anterior" de la paginación
-        anterior_descriptor = Descriptor.objects.filter(
-            principio__estrategia_id=descriptor.principio.estrategia.id,
-            principio_id=descriptor.principio.id,
-            id__lt=descriptor.id
-        ).last()
-        siguiente_descriptor = Descriptor.objects.filter(
-            principio__estrategia_id=descriptor.principio.estrategia.id,
-            principio_id=descriptor.principio.id,
-            id__gt=descriptor.id
-        ).first()
+        siguiente_descriptor = descriptores.filter(id__gt=descriptor.id).first()
 
-        # Si es el último descriptor, el siguiente descriptor será el mismo para evitar errores
-        if ultimo_descriptor.id == descriptor.id:
+        if siguiente_descriptor is None:
             siguiente_descriptor = descriptor
-        elif ultimo_descriptor.id != descriptor.id and siguiente_descriptor is None:
-            # Si no es el último descriptor y no hay siguiente descriptor,
-            # se debe buscar el primer descriptor del siguiente principio,
-            # si no hay siguiente principio, se redirige a la vista de nuevo_individual (ultimo principio)
-            siguiente_principio = Principio.objects.filter(
-                estrategia_id=descriptor.principio.estrategia.id,
-                id__gt=descriptor.principio.id,
-            ).first()
+        elif len(siguiente_descriptor.contenido_html.strip()) == 0:
+            siguiente_descriptor = self.buscar_descriptores_hijos(siguiente_descriptor.descriptor_set.all()).first()
 
-            if siguiente_principio is None:
-                return redirect('elama:nuevo_individual', autoevaluacion.id)
+        anterior_descriptor = descriptores.filter(id__lt=descriptor.id).last()
 
-            siguiente_descriptor = siguiente_principio.descriptor_set.first()
-
-        # Si no es el primer descriptor y no hay anterior descriptor,
-        # se debe buscar el último descriptor del anterior principio,
-        # si no hay anterior principio, se redirige a la vista de nuevo_individual (primer principio)
-        if primer_descriptor.id != descriptor.id and anterior_descriptor is None:
-            anterior_principio = Principio.objects.filter(
-                estrategia_id=descriptor.principio.estrategia.id,
-                id__lt=descriptor.principio.id,
+        if anterior_descriptor is None:
+            anterior_descriptor = descriptor
+        elif len(anterior_descriptor.contenido_html.strip()) == 0:
+            anterior_descriptor = descriptores.filter(
+                id__lt=anterior_descriptor.id,
+                contenido_html__isnull=False
             ).last()
-
-            if anterior_principio is None:
-                return redirect('elama:nuevo_individual', autoevaluacion.id)
-
-            anterior_descriptor = anterior_principio.descriptor_set.last()
 
         return {
             'primer_descriptor': primer_descriptor,

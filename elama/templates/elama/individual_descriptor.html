@@ -2,7 +2,6 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
-     <div id="alertas"></div>
     <h1 class="text-center">
         Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
         Migrantes Adultos (EsPROLAMA)
@@ -44,9 +43,6 @@
         <form id="descriptor-form" action="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}"
               method="post">
             {% csrf_token %}
-            {% if ultimo_descriptor.id == descriptor.id %}
-                <input type="hidden" name="guardar" value="1" />
-            {% endif %}
             <div class="d-flex align-items-center gap-2" id="id_valoracion">
                 {% for opcion in form.valoracion %}
                     <div>
@@ -74,22 +70,3 @@
         </form>
     </div>
 {% endblock content %}
-
-{% block scripts %}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const alertas = document.getElementById('alertas');
-            const opciones = document.querySelectorAll('input[type=radio]');
-            const siguiente = document.getElementById('siguiente');
-
-            siguiente.addEventListener('click', () => {
-                const opcionSeleccionada = Array.from(opciones).filter(opcion => opcion.checked);
-                if (opcionSeleccionada.length === 0) {
-                    alertas.innerHTML = `
-                        {% include 'elama/components/alerta.html' with tipo_alerta="danger" titulo="Error" contenido="Selecciona una opción antes de continuar" %}
-                    `;
-                }
-            });
-        });
-    </script>
-{% endblock %}

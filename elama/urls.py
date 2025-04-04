@@ -17,10 +17,10 @@ urlpatterns = [
     path('home/', home, name='home'),
     # Página de creación de nueva autoevaluación individual.
     path('individual/', crear_individual, name='crear-individual'),
+    # Página del listado de los descriptores de la autoevaluación individual.
     path('individual/<int:autoevaluacion_id>/', nuevo_individual, name='individual'),
-    path('individual/<int:autoevaluacion_id>/<int:descriptor_id>/', individual_descriptor, name='individual-descriptor'),
     # Página de valoración de un descriptor.
-    # FIXME: path('individual/<int:id_autoevaluacion>/<int:id_descriptor>/', volcar_autoevaluacion, name='volcar-autoevaluacion'),
+    path('individual/<int:autoevaluacion_id>/<int:descriptor_id>/', individual_descriptor, name='individual-descriptor'),
     # Página de finalización de autoevaluación individual.
     path('finalizar-individual/<int:id_autoevaluacion>/', finalizar_individual, name='finalizar-individual'),
 ]

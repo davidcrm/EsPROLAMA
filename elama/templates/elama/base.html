@@ -9,6 +9,7 @@
 
         {% bootstrap_css %}
         {% bootstrap_javascript %}
+         {% block styles %}{% endblock %}
     </head>
 
     <body>
@@ -33,7 +34,7 @@
                         <li class="nav-item">
                             <form action="{% url 'elama:logout' %}"  class="form ms-2">
                                 {% csrf_token %}
-                                {% bootstrap_button button_type="submit" content="Cerrar sesión" %}
+                                <button type="submit" class="btn btn-outline-danger">Cerrar sesión</button>
                             </form>
                         </li>
                     {% endif %}
@@ -73,5 +74,6 @@
                 </div>
             </div>
         </div>
+      {% block scripts %}{% endblock %}
     </body>
 </html>

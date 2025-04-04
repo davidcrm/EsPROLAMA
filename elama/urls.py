@@ -1,11 +1,9 @@
 from django.urls import path
-from .views.crear_indiviudal import crear_individual
-from .views.dashboard import dashboard
-from .views.finalizar_individual import finalizar_individual
-from .views.individual import individual
+
 from .views.auth import login, sign_out
-from .views.main import main
-from .views.volcar_autoevaluacion import volcar_autoevaluacion
+from .views.autoevaluacion import mis_autoevaluaciones
+from .views.home import home
+from .views.individual import crear_individual, nuevo_individual, individual_descriptor, finalizar_individual
 
 app_name = 'elama'
 urlpatterns = [
@@ -14,15 +12,15 @@ urlpatterns = [
     # Página de cierre de sesión
     path('logout', sign_out, name="logout"),
     # Página principal con información sobre las autoevaluaciones del usuario (usuario autenticado).
-    path('dashboard/', dashboard, name="dashboard"),
+    path('dashboard/', mis_autoevaluaciones, name="dashboard"),
     # Página creación de autoevaluación (individual o grupal)
-    path('main/', main, name='main'),
+    path('home/', home, name='home'),
     # Página de creación de nueva autoevaluación individual.
-    path('crear-individual/', crear_individual, name='crear-individual'),
-    # Página de autoevaluación individual.
-    path('individual/<int:id_autoevaluacion>/', individual, name='individual'),
+    path('individual/', crear_individual, name='crear-individual'),
+    path('individual/<int:autoevaluacion_id>/', nuevo_individual, name='individual'),
+    path('individual/<int:autoevaluacion_id>/<int:descriptor_id>/', individual_descriptor, name='individual-descriptor'),
     # Página de valoración de un descriptor.
-    path('individual/<int:id_autoevaluacion>/<int:id_descriptor>/', volcar_autoevaluacion, name='volcar-autoevaluacion'),
+    # FIXME: path('individual/<int:id_autoevaluacion>/<int:id_descriptor>/', volcar_autoevaluacion, name='volcar-autoevaluacion'),
     # Página de finalización de autoevaluación individual.
     path('finalizar-individual/<int:id_autoevaluacion>/', finalizar_individual, name='finalizar-individual'),
 ]

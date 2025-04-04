@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.http import HttpRequest
 
 # Vista de login que redirige al usuario a la página de login.
-def login(request: HttpRequest):
+def login():
     return redirect('users/login')
 
 def sign_out(request: HttpRequest):

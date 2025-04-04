@@ -33,16 +33,16 @@
     {% for e in estrategias %}
         <h3 class="bg-light border-bottom mt-5">{{ e }}</h3>
 
-        {% for p in principios %}
-            {% if p.estrategia.id == e.id %}
+        {% for p in e.principio_set.all %}
+            {% if p.descriptor_set.all|length > 0 and p.estrategia.id == e.id %}
                 <h4 class="mt-4">{{ p }}</h4>
 
-                {% for d in descriptores %}
+                {% for d in p.descriptor_set.all %}
                     {% if d.principio.id == p.id %}
                         {% if not d.descriptor_padre %}
                             <h5 class="mt-2 ps-4">
                                 {% if d.contenido_html %}
-                                    <a href="{% url 'elama:volcar-autoevaluacion' autoevaluacion.id d.id %}">{{ d }}</a>
+                                    <a href="{% url 'elama:individual-descriptor' autoevaluacion.id d.id %}">{{ d }}</a>
                                 {% else %}
                                     {{ d }}
                                 {% endif %}
@@ -53,7 +53,7 @@
                         {% else %}
                             <h6 class="mt-2 ps-5">
                                 {% if d.contenido_html %}
-                                    <a href="{% url 'elama:volcar-autoevaluacion' autoevaluacion.id d.id %}">{{ d }}</a>
+                                     <a href="{% url 'elama:individual-descriptor' autoevaluacion.id d.id %}">{{ d }}</a>
                                 {% else %}
                                     {{ d }}
                                 {% endif %}

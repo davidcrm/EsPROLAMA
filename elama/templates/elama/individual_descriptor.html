@@ -1,0 +1,72 @@
+{% extends "elama/base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <h1 class="text-center">
+        Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
+        Migrantes Adultos (EsPROLAMA)
+    </h1>
+
+    <h3 class="text-center mt-5">AUTOEVALUACIÓN INDIVIDUAL</h3>
+    <div class="d-flex align-items-center justify-content-between gap-3 my-3">
+        <a
+                href="
+                    {% if  primer_descriptor.id == descriptor.id %}
+                        {% url 'elama:individual' autoevaluacion.id %}
+                    {% else %}
+                        {% url 'elama:individual-descriptor' autoevaluacion.id anterior_descriptor.id %}
+                    {% endif %}
+                "
+                class="btn btn-secondary"
+        >
+            {% if primer_descriptor.id == descriptor.id %}Volver{% else %}Anterior{% endif %}
+        </a>
+        <button type="submit" id="siguiente" form="descriptor-form" class="btn btn-primary">
+            {% if ultimo_descriptor.id == descriptor.id %}Guardar{% else %}Siguiente{% endif %}
+        </button>
+    </div>
+    {% if autoevaluacion.finalizada %}
+        <h6 class="text-center text-danger">FINALIZADA</h6>
+    {% endif %}
+
+    <h3 class="bg-light border-bottom">{{ descriptor.principio.estrategia.titulo }}</h3>
+    <h4 class="mt-4">{{ descriptor.principio.titulo }}</h4>
+    {% if not descriptor.descriptor_padre %}
+        <h5 class="mt-2 ps-4">{{ descriptor.titulo }}</h5>
+        <div class="mt-2 ps-4">{{ descriptor.contenido_html|safe }}</div>
+    {% else %}
+        <h5 class="mt-2 ps-4">{{ descriptor.descriptor_padre.titulo }}</h5>
+        <h6 class="mt-2 ps-5">{{ descriptor.titulo }}</h6>
+        <div class="mt-2 ps-5">{{ descriptor.contenido_html|safe }}</div>
+    {% endif %}
+    <div class="d-flex align-items-center justify-content-center mt-5">
+        <form id="descriptor-form" action="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}"
+              method="post">
+            {% csrf_token %}
+            <div class="d-flex align-items-center gap-2" id="id_valoracion">
+                {% for opcion in form.valoracion %}
+                    <div>
+                        <input
+                                type="radio"
+                                class="btn-check"
+                                name="valoracion"
+                                id="id_valoracion_{{ opcion.data.value }}"
+                                value="{{ opcion.data.value }}"
+                                {% if form.instance.valoracion and form.instance.valoracion|floatformat:0 == opcion.data.value|floatformat:0 %}
+                                checked
+                                {% endif %}
+                                {% if autoevaluacion.finalizada %} disabled {% endif %}
+                        />
+                        <label
+                                class="btn btn-outline-success"
+                                for="id_valoracion_{{ opcion.data.value }}"
+                                style="width: 100px;"
+                        >
+                            {{ opcion.data.value }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+{% endblock content %}

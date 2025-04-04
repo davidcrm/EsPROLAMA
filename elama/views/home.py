@@ -4,5 +4,5 @@ from django.shortcuts import render
 
 # Vista principal, solo accesible para usuarios autenticados.
 @login_required
-def main(request):
-    return render(request, 'elama/main.html')
+def home(request):
+    return render(request, 'elama/home.html')

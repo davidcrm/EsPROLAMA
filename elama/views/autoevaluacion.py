@@ -2,9 +2,8 @@ from django.shortcuts import render
 
 from elama.models import Autoevaluacion
 
-def dashboard(request):
+def mis_autoevaluaciones(request):
     autoevaluaciones = Autoevaluacion.objects.order_by("fecha_hora")
-    context = {
+    return render(request, 'elama/dashboard.html', {
         'autoevaluaciones': autoevaluaciones
-    }
-    return render(request, 'elama/dashboard.html', context)
+    })

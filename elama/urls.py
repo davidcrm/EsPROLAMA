@@ -22,5 +22,5 @@ urlpatterns = [
     # Página de valoración de un descriptor.
     path('individual/<int:autoevaluacion_id>/<int:descriptor_id>/', individual_descriptor, name='individual-descriptor'),
     # Página de finalización de autoevaluación individual.
-    path('finalizar-individual/<int:id_autoevaluacion>/', finalizar_individual, name='finalizar-individual'),
+    path('finalizar-individual/<int:autoevaluacion_id>/', finalizar_individual, name='finalizar-individual'),
 ]

@@ -1,4 +1,4 @@
-from django.contrib.admin.templatetags.admin_list import pagination
+from django.db.models.functions import Trim
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpRequest
@@ -15,9 +15,19 @@ def crear_individual(_):
 def nuevo_individual(request: HttpRequest, autoevaluacion_id: int):
     autoevaluacion = get_object_or_404(Autoevaluacion, pk=autoevaluacion_id)
     estrategias = Estrategia.objects.prefetch_related('principio_set__descriptor_set').all()
+    volcado_completo = (
+      Volcado.objects.filter(autoevaluacion_id=autoevaluacion_id).count()
+      ==
+      (Descriptor.objects
+       .annotate(contenido_limpio=Trim('contenido_html'))
+       .filter(contenido_limpio__isnull=False)
+       .exclude(contenido_limpio='')).count()
+    )
+
     return render(request, 'elama/individual.html', {
         'autoevaluacion': autoevaluacion,
-        'estrategias': estrategias
+        'estrategias': estrategias,
+        'volcado_completo': volcado_completo
     })
 
 @login_required
@@ -65,8 +75,18 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
 
 # Vista para finalizar una autoevaluación, marcándola como finalizada.
 @login_required
-def finalizar_individual(_, id_autoevaluacion):
-    autoevaluacion = Autoevaluacion.objects.get(pk=id_autoevaluacion)
-    autoevaluacion.finalizada = True  # Marca la autoevaluación como finalizada.
-    autoevaluacion.save()  # Guarda los cambios.
-    return redirect('elama:individual', id_autoevaluacion=id_autoevaluacion)  # Redirige a la vista individual.
+def finalizar_individual(_, autoevaluacion_id):
+    autoevaluacion = Autoevaluacion.objects.get(pk=autoevaluacion_id)
+
+    descriptores = (Descriptor.objects
+                .annotate(contenido_limpio=Trim('contenido_html'))
+                .filter(contenido_limpio__isnull=False)
+                .exclude(contenido_limpio=''))
+
+    volcados = Volcado.objects.filter(autoevaluacion_id=autoevaluacion.id)
+
+    if volcados.count() == descriptores.count():
+        autoevaluacion.finalizada = True  # Marca la autoevaluación como finalizada.
+        autoevaluacion.save()  # Guarda los cambios.
+
+    return redirect('elama:individual', autoevaluacion_id=autoevaluacion_id)  # Redirige a la vista individual.

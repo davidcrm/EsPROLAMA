@@ -31,7 +31,7 @@
     {% endif %}
 
     {% for e in estrategias %}
-        <h3 class="bg-light border-bottom mt-5">{{ e }}</h3>
+        <h3 class="border-bottom mt-5">{{ e }}</h3>
 
         {% for p in e.principio_set.all %}
             {% if p.descriptor_set.all|length > 0 and p.estrategia.id == e.id %}

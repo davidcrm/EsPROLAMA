@@ -8,13 +8,13 @@ if (-not $dockerInstalled) {
 # Definir nombre para la imagen y el contenedor
 $appName = "esprolama"
 $imageVersion = "latest"
-$imageName = "$appName:$imageVersion"
+$imageName = "${appName}:${imageVersion}"
 $containerName = "$appName"
 $postgresVolume = "${appName}_postgres_data"
 
 # Construir la imagen Docker
 Write-Host "Construyendo la imagen Docker..."
-docker build -t $imageName ..
+docker build -t $imageName .
 
 if ($?) {
     Write-Host "Imagen construida exitosamente." -ForegroundColor Green
@@ -41,7 +41,7 @@ if (-not $volumeExists) {
 
 # Ejecutar el contenedor Docker con el volumen mapeado
 Write-Host "Ejecutando el contenedor Docker..."
-docker run -d --name $containerName -v $postgresVolume:/var/lib/postgresql/data -p 8000:8000 $imageName
+docker run -d --name $containerName -v ${postgresVolume}:/var/lib/postgresql/data -p 8000:8000 $imageName
 
 if ($?) {
     Write-Host "Contenedor ejecutado exitosamente. Accede a tu aplicación en http://0.0.0.0:8000" -ForegroundColor Green

@@ -1,33 +1,32 @@
-FROM python:3.12.0-slim AS build
+FROM python:3.12.0-slim AS builder
 
-# Instalación de paquetes utilitarios
-RUN apt update && apt install -y build-essential libpq-dev gcc wget curl nano net-tools
+RUN apt update -y && apt install -y build-essential libpq-dev gcc
 
 WORKDIR /app
 
-# Copiar archivos de la aplicación
-COPY . /app
+COPY . .
 
-# Instalar dependencias de la aplicación
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# Limpieza de archivos y directorios innecesarios
-RUN rm -rf /app/.venv 2> /dev/null \
-    && rm -rf /app/.git 2> /dev/null \
-    && rm /app/README.md 2> /dev/null \
-    && rm /app/Dockerfile 2> /dev/null \
-    && rm /app/requirements.txt 2> /dev/null \
-    && rm /app/docker-compose.yml 2> /dev/null
+FROM python:3.12.0-slim AS final
 
-# Exponer el puerto 8000
+RUN apt update -y && \
+    apt install -y postgresql postgresql-contrib libpq-dev curl nano net-tools pgloader
+
+WORKDIR /app
+
+COPY --from=builder /app /app
+
+RUN pgloader sqlite:///tmp/db.sqlite3 postgresql://elama:uhu.2024@localhost/esprolama
+
+RUN rm -rf /app/db.sqlite3 /app/.dockerignore /app/requirements.txt 2> /dev/null
+
 EXPOSE 8000
 
-# Dar valor a las variables de entorno
 ENV DB_NAME=esprolama
 ENV DB_USER=elama
 ENV DB_PASSWORD=uhu.2024
-ENV DB_HOST=db
+ENV DB_HOST=localhost
 ENV DB_PORT=5432
 
-# Iniciar la aplicación de Django
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["service", "postgresql", "start", "&&", "python", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -17,11 +17,11 @@
                         {% url 'elama:individual-descriptor' autoevaluacion.id anterior_descriptor.id %}
                     {% endif %}
                 "
-                class="btn btn-secondary"
+                class="link-opacity-100"
         >
             {% if primer_descriptor.id == descriptor.id %}Volver{% else %}Anterior{% endif %}
         </a>
-        <button type="submit" id="siguiente" form="descriptor-form" class="btn btn-primary">
+        <button type="submit" id="siguiente" form="descriptor-form" class="btn btn-link">
             {% if ultimo_descriptor.id == descriptor.id %}Guardar{% else %}Siguiente{% endif %}
         </button>
     </div>

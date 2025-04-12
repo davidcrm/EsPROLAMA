@@ -13,7 +13,7 @@ def crear_individual(request: HttpRequest):
 
 @login_required
 def nuevo_individual(request: HttpRequest, autoevaluacion_id: int):
-    autoevaluacion = Autoevaluacion.objects.get(autoevaluacion_id=autoevaluacion_id, usuario_id=request.user.id)
+    autoevaluacion = Autoevaluacion.objects.get(pk=autoevaluacion_id, usuario_id=request.user.id)
     estrategias = Estrategia.objects.prefetch_related('principio_set__descriptor_set').all()
 
     return render(request, 'elama/individual.html', {
@@ -24,7 +24,7 @@ def nuevo_individual(request: HttpRequest, autoevaluacion_id: int):
 @login_required
 def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descriptor_id: int):
     individual_service = IndividualService()
-    autoevaluacion = Autoevaluacion.objects.get(autoevaluacion_id=autoevaluacion_id, usuario_id=request.user.id)
+    autoevaluacion = Autoevaluacion.objects.get(pk=autoevaluacion_id, usuario_id=request.user.id)
     descriptor = Descriptor.objects.prefetch_related("principio__descriptor_set").get(pk=descriptor_id)
 
     paginacion = individual_service.paginacion(descriptor)
@@ -68,7 +68,6 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
 @login_required
 def finalizar_individual(request: HttpRequest, autoevaluacion_id: int):
     autoevaluacion = Autoevaluacion.objects.get(pk=autoevaluacion_id, usuario_id=request.user.id)
-
     autoevaluacion.finalizada = True  # Marca la autoevaluación como finalizada.
     autoevaluacion.save()  # Guarda los cambios.
 

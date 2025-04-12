@@ -6,14 +6,14 @@ from elama.services.individual_service import IndividualService
 from elama.models import Estrategia, Principio, Descriptor, Autoevaluacion, Volcado
 from elama.forms import VolcadoForm
 @login_required
-def crear_individual(_):
-    autoevaluacion = Autoevaluacion()  # Crea una nueva instancia de Autoevaluacion.
+def crear_individual(request: HttpRequest):
+    autoevaluacion = Autoevaluacion(usuario_id=request.user.id)  # Crea una nueva instancia de Autoevaluacion.
     autoevaluacion.save()  # Guarda la autoevaluación en la base de datos.
     return redirect('elama:individual', autoevaluacion_id=autoevaluacion.id)
 
 @login_required
 def nuevo_individual(request: HttpRequest, autoevaluacion_id: int):
-    autoevaluacion = get_object_or_404(Autoevaluacion, pk=autoevaluacion_id)
+    autoevaluacion = Autoevaluacion.objects.get(autoevaluacion_id=autoevaluacion_id, usuario_id=request.user.id)
     estrategias = Estrategia.objects.prefetch_related('principio_set__descriptor_set').all()
 
     return render(request, 'elama/individual.html', {
@@ -24,7 +24,7 @@ def nuevo_individual(request: HttpRequest, autoevaluacion_id: int):
 @login_required
 def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descriptor_id: int):
     individual_service = IndividualService()
-    autoevaluacion = get_object_or_404(Autoevaluacion, pk=autoevaluacion_id)
+    autoevaluacion = Autoevaluacion.objects.get(autoevaluacion_id=autoevaluacion_id, usuario_id=request.user.id)
     descriptor = Descriptor.objects.prefetch_related("principio__descriptor_set").get(pk=descriptor_id)
 
     paginacion = individual_service.paginacion(descriptor)
@@ -66,8 +66,8 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
 
 # Vista para finalizar una autoevaluación, marcándola como finalizada.
 @login_required
-def finalizar_individual(_, autoevaluacion_id):
-    autoevaluacion = Autoevaluacion.objects.get(pk=autoevaluacion_id)
+def finalizar_individual(request: HttpRequest, autoevaluacion_id: int):
+    autoevaluacion = Autoevaluacion.objects.get(pk=autoevaluacion_id, usuario_id=request.user.id)
 
     autoevaluacion.finalizada = True  # Marca la autoevaluación como finalizada.
     autoevaluacion.save()  # Guarda los cambios.

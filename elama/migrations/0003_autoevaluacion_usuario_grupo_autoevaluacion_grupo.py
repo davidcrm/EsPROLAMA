@@ -17,8 +17,6 @@ class Migration(migrations.Migration):
             model_name="autoevaluacion",
             name="usuario",
             field=models.ForeignKey(
-                blank=True,
-                null=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 to=settings.AUTH_USER_MODEL,
             ),

@@ -27,7 +27,7 @@ if (-not $containerExists) {
     }
 }
 
-# Esperar a que PostgreSQL esté listo (opcional, pero útil)
+Write-Host "⏳ Esperando a que el contenedor esté listo..."
 Start-Sleep -Seconds 5
 
 Write-Host "🔄 Actualizando apt e instalando pgloader en el contenedor $containerName..."

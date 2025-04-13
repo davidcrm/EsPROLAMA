@@ -2,34 +2,34 @@
 
 {% block content %}
     <div>
-        <div class="accordion accordion-flush" id="grupos">
+
+        <div class="accordion accordion-flush" id="grupos-supervisados">
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#flush-collapse-grupos" aria-expanded="false"
+                            data-bs-target="#flush-collapse-grupos-supervisados" aria-expanded="false"
                             aria-controls="flush-collapseOne">
-                        Mis autoevaluaciones grupales
+                        Autoevaluaciones supervisadas
                     </button>
                 </h2>
-                <div id="flush-collapse-grupos" class="accordion-collapse collapse" data-bs-parent="grupos">
+                <div id="flush-collapse-grupos-supervisados" class="accordion-collapse collapse"
+                     data-bs-parent="grupos-supervisados">
                     <div class="accordion-body">
-                        {% for grupo in grupos %}
+                        {% for grupo in grupos_supervisados %}
                             <div class="accordion accordion-flush" id="grupo-{{ grupo.id }}">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button class="accordion-button collapsed" type="button"
                                                 data-bs-toggle="collapse"
-                                                data-bs-target="#flush-collapse{{ forloop.counter }}"
+                                                data-bs-target="#flush-collapse-{{ grupo.id }}"
                                                 aria-expanded="false" aria-controls="flush-collapseOne">
                                             {{ grupo }}
                                         </button>
                                     </h2>
-                                    <div id="flush-collapse{{ forloop.counter }}" class="accordion-collapse collapse"
+                                    <div id="flush-collapse-{{ grupo.id }}" class="accordion-collapse collapse"
                                          data-bs-parent="grupo-{{ autoevaluacion.id }}">
                                         <div class="accordion-body">
-                                            {% for autoevaluacion in grupo.autoevaluacion_set.all %}
-                                                <p>{{ autoevaluacion.fecha_hora|date }}</p>
-                                            {% endfor %}
+                                            {% include 'elama/components/tabla_autoevaluacion.html' with autoevaluaciones=grupo.autoevaluacion_set.all show_user=True %}
                                         </div>
                                     </div>
                                 </div>
@@ -39,4 +39,24 @@
                 </div>
             </div>
         </div>
+
+        <div class="accordion accordion-flush" id="grupos-no-supervisados">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapse-grupos-no-supervisados" aria-expanded="false"
+                            aria-controls="flush-collapseOne">
+                        Autoevaluaciones no supervisadas
+                    </button>
+                </h2>
+                <div id="flush-collapse-grupos-no-supervisados" class="accordion-collapse collapse"
+                     data-bs-parent="grupos-no-supervisados">
+                    <div class="accordion-body">
+                        {% include 'elama/components/tabla_autoevaluacion.html' with autoevaluaciones=grupales_no_supervisadas show_group=True %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 {% endblock content %}

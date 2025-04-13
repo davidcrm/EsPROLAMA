@@ -1,44 +1,12 @@
 {% extends 'elama/base.html' %}
 
 {% block content %}
+
     <div class="d-flex align-items-center justify-content-between mb-3">
         <h1>TUS EVALUACIONES</h1>
         <a href="{% url "elama:crear-individual" %}" class="btn btn-success">NUEVA EVALUACIÓN</a>
     </div>
 
-    <div class="flex-container">
-        <table class="table table-striped table-hover shadow-sm rounded align-middle align-center">
-            <thead>
-            <tr>
-                <th scope="col">Autoevaluación</th>
-                <th scope="col">Fecha de última modificación</th>
-                <th class="text-center" scope="col">Acciones</th>
-            </tr>
-            </thead>
+    {% include 'elama/components/tabla_autoevaluacion.html' with autoevaluaciones=autoevaluaciones %}
 
-            <tbody>
-            {% for autoevaluacion in autoevaluaciones reversed %}
-                <tr>
-                    <td>
-                        {{ autoevaluacion.fecha_hora }}
-                    </td>
-                    <td>
-                        {{ autoevaluacion.fecha_hora }}
-                    </td>
-                    {% if autoevaluacion.finalizada %}
-                        <td>
-                            <a href="{% url "elama:individual" autoevaluacion.id %}"
-                               class="btn btn-secondary w-50 d-flex justify-content-center m-auto">Ver</a>
-                        </td>
-                    {% else %}
-                        <td>
-                            <a href="{% url "elama:individual" autoevaluacion.id %}"
-                               class="btn btn-primary w-50 d-flex justify-content-center m-auto">Editar</a>
-                        </td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
 {% endblock content %}

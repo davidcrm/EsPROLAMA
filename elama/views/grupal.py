@@ -17,11 +17,13 @@ def crear_grupal(request:HttpRequest):
             grupo__responsable_id=usuario_autenticado.id,
         )
     )
+    usuarios = User.objects.filter(is_superuser=False, is_staff=False)
 
     return render(request,
         'elama/grupal.html',
         {
             'grupos_supervisados': grupos_supervisados,
-            'grupales_no_supervisadas': grupales_no_supervisadas
+            'grupales_no_supervisadas': grupales_no_supervisadas,
+            'usuarios': usuarios,
          }
     )

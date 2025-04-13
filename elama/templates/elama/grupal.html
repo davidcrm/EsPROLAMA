@@ -2,7 +2,44 @@
 
 {% block content %}
     <div>
+        <button type="button" class="d-flex btn btn-success mb-3" style="justify-self: end" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            NUEVA EVALUACIÓN
+        </button>
 
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog d-flex justify-content-center align-items-center " style="min-height: 85vh">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Elige tu equipo de evaluación</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="">
+                        {% comment %}
+                            TODO: Añadir Barra de Búsqueda y filtrado
+                        {% endcomment %}
+                            <ul class="list-group" style="max-height: 300px; overflow-y: auto">
+                                {% for usuario in usuarios %}
+                                    <li class="list-group-item">
+                                        <div class="form-check">
+                                            <input name="ids" class="form-check-input" type="checkbox" value="{{ usuario.id }}">
+                                            <label class="form-check-label" for="ids">
+                                                {{ usuario.username }}
+                                            </label>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary">Crear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="accordion accordion-flush" id="grupos-supervisados">
             <div class="accordion-item">
                 <h2 class="accordion-header">
@@ -59,4 +96,5 @@
         </div>
 
     </div>
+
 {% endblock content %}

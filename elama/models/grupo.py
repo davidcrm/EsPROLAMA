@@ -8,4 +8,4 @@ class Grupo(models.Model):
     def __str__(self):
         if self.nombre:
             return self.nombre
-        return f"Grupo - {self.id}"
+        return f"Grupo {self.id}"

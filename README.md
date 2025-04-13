@@ -59,7 +59,7 @@ cd EsPROLAMA
    
 5. **Levantar los contenedores Docker:**
     ```shell
-    docker compose up -d
+    ./scripts/deploy.sh
     ```
    
 ### Windows
@@ -100,5 +100,5 @@ cd EsPROLAMA
     Finalmente, ejecuta los siguientes comandos para iniciar los contenedores Docker en segundo plano:
 
    ```bash
-   docker compose up -d
+   ./scripts/deploy.ps1
    ```

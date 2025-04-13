@@ -6,7 +6,13 @@ from elama.models import Grupo, Autoevaluacion
 
 
 @login_required
-def crear_grupal(request:HttpRequest):
+def grupal(request: HttpRequest):
+    if request.method == 'POST':
+        # TODO: Crear grupo y asignar el responsable
+        # TODO: Crear las autoevaluaciones individuales para cada usuario
+        print(f"/POST /grupal {request.POST}")
+
+
     usuario_autenticado = User.objects.get(pk=request.user.id)
     grupos_supervisados = Grupo.objects.filter(responsable_id=usuario_autenticado.id)
     grupales_no_supervisadas = (Autoevaluacion.objects

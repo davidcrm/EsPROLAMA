@@ -12,7 +12,7 @@
         <a
                 href="
                     {% if  primer_descriptor.id == descriptor.id %}
-                        {% url 'elama:individual' autoevaluacion.id %}
+                        {% url 'elama:individual-detail' autoevaluacion.id %}
                     {% else %}
                         {% url 'elama:individual-descriptor' autoevaluacion.id anterior_descriptor.id %}
                     {% endif %}

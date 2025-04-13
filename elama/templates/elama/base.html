@@ -9,6 +9,15 @@
 
   {% bootstrap_css %}
   {% bootstrap_javascript %}
+
+  <style>
+    body {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        min-height: 100vh;
+    }
+  </style>
+
   {% block styles %}{% endblock %}
 </head>
 
@@ -67,7 +76,7 @@
   {% block content %} {% endblock content %}
 </main>
 
-<footer class="mt-5 pt-5">
+<footer class="mt-5 pt-5 pb-2">
   <p class="text-center">
     Desarrollada por <a class="btn btn-outline-dark" href="" data-bs-toggle="modal" data-bs-target="#equipoModal">
     alumnado</a> del CFGS en Desarrollo de Aplicaciones Multiplataforma del IES Lomo de La Herradura

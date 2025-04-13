@@ -1,9 +1,9 @@
-from django.db.models.functions import Trim
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
+from django.db.models import Q
 from django.http import HttpRequest
 from elama.services.individual_service import IndividualService
-from elama.models import Estrategia, Principio, Descriptor, Autoevaluacion, Volcado
+from elama.models import Estrategia, Descriptor, Autoevaluacion, Volcado
 from elama.forms import VolcadoForm
 @login_required
 def crear_individual(request: HttpRequest):
@@ -13,7 +13,10 @@ def crear_individual(request: HttpRequest):
 
 @login_required
 def nuevo_individual(request: HttpRequest, autoevaluacion_id: int):
-    autoevaluacion = Autoevaluacion.objects.get(pk=autoevaluacion_id, usuario_id=request.user.id)
+    autoevaluacion = Autoevaluacion.objects.filter(
+        Q(pk=autoevaluacion_id),
+        Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
+    ).get()
     estrategias = Estrategia.objects.prefetch_related('principio_set__descriptor_set').all()
 
     return render(request, 'elama/individual.html', {
@@ -24,7 +27,10 @@ def nuevo_individual(request: HttpRequest, autoevaluacion_id: int):
 @login_required
 def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descriptor_id: int):
     individual_service = IndividualService()
-    autoevaluacion = Autoevaluacion.objects.get(pk=autoevaluacion_id, usuario_id=request.user.id)
+    autoevaluacion = Autoevaluacion.objects.filter(
+        Q(pk=autoevaluacion_id),
+        Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
+    ).get()
     descriptor = Descriptor.objects.prefetch_related("principio__descriptor_set").get(pk=descriptor_id)
 
     paginacion = individual_service.paginacion(descriptor)
@@ -67,7 +73,10 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
 # Vista para finalizar una autoevaluación, marcándola como finalizada.
 @login_required
 def finalizar_individual(request: HttpRequest, autoevaluacion_id: int):
-    autoevaluacion = Autoevaluacion.objects.get(pk=autoevaluacion_id, usuario_id=request.user.id)
+    autoevaluacion = Autoevaluacion.objects.filter(
+        Q(pk=autoevaluacion_id),
+        Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
+    ).get()
     autoevaluacion.finalizada = True  # Marca la autoevaluación como finalizada.
     autoevaluacion.save()  # Guarda los cambios.
 

@@ -9,7 +9,8 @@ from elama.models import Grupo, Autoevaluacion
 def grupal(request: HttpRequest):
     if request.method == 'POST':
         # TODO: Crear grupo y asignar el responsable
-        # TODO: Crear las autoevaluaciones individuales para cada usuario
+        # TODO: Crear las autoevaluaciones individuales para cada usuario,
+        #  incluyendo el usuario autenticado que no viene en los datos del formulario
         print(f"/POST /grupal {request.POST}")
 
 
@@ -23,7 +24,9 @@ def grupal(request: HttpRequest):
             grupo__responsable_id=usuario_autenticado.id,
         )
     )
-    usuarios = User.objects.filter(is_superuser=False, is_staff=False)
+    usuarios = (User.objects
+                .filter(is_superuser=False, is_staff=False)
+                .exclude(id=usuario_autenticado.id))
 
     return render(request,
         'elama/grupal.html',

@@ -26,6 +26,7 @@
     {% else %}
         <p class="text-center">
             <a class="btn btn-success mt-2"
+               {% if autoevaluacion.finalizada %} disabled {% endif %}
                href="" data-bs-toggle="modal" data-bs-target="#finalizarModal">Finalizar</a>
         </p>
     {% endif %}

@@ -1,10 +1,12 @@
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from django.http import HttpRequest
 from elama.services.individual_service import IndividualService
-from elama.models import Estrategia, Descriptor, Autoevaluacion, Volcado
+from elama.models import Estrategia, Descriptor, Volcado
 from elama.forms import VolcadoForm
+from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest, FileResponse
+from elama.models import Autoevaluacion
+from elama.services.pdf_service import PdfService
 
 @login_required
 def individual(request: HttpRequest):
@@ -91,3 +93,15 @@ def finalizar_individual(request: HttpRequest, autoevaluacion_id: int):
     autoevaluacion.save()  # Guarda los cambios.
 
     return redirect('individual-detail', autoevaluacion_id=autoevaluacion_id)  # Redirige a la vista individual.
+
+@login_required
+def exportar(request: HttpRequest, autoevaluacion_id: int):
+    autoevaluacion = Autoevaluacion.objects.get(autoevaluacion_id=autoevaluacion_id)
+
+    pdf_file = PdfService.export_autoevaluacion(autoevaluacion)
+
+    return FileResponse(
+        pdf_file,
+        as_attachment=True,
+        filename="autoevaluacion.pdf"
+    )

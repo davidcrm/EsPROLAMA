@@ -1,9 +1,8 @@
 from django.urls import path
-
 from .views.auth import login, sign_out
 from .views.home import home
 from .views.grupal import grupal
-from .views.individual import individual, detalle_individual, individual_descriptor, finalizar_individual
+from .views.individual import individual, detalle_individual, individual_descriptor, finalizar_individual, exportar
 
 app_name = 'elama'
 urlpatterns = [
@@ -23,5 +22,6 @@ urlpatterns = [
     path('finalizar-individual/<int:autoevaluacion_id>/', finalizar_individual, name='finalizar-individual'),
     # Página para elegir usuarios pertenecientes a una evaluación grupal
     path('grupal/', grupal, name='grupal'),
-
+    # Vista para exportar el pdf
+    path('export/<int:autoevaluacion_id>/', exportar, name="export"),
 ]

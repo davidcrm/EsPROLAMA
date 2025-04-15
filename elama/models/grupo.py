@@ -6,6 +6,6 @@ class Grupo(models.Model):
     responsable = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        if self.nombre:
+        if self.nombre and len(self.nombre.strip()) > 0:
             return self.nombre
         return f"Grupo {self.id}"

@@ -4,15 +4,24 @@ from django.http import HttpRequest
 from django.shortcuts import render
 from elama.models import Grupo, Autoevaluacion
 
-
 @login_required
 def grupal(request: HttpRequest):
-    if request.method == 'POST':
-        # TODO: Crear grupo y asignar el responsable
-        # TODO: Crear las autoevaluaciones individuales para cada usuario,
-        #  incluyendo el usuario autenticado que no viene en los datos del formulario
-        print(f"/POST /grupal {request.POST}")
 
+    if request.method == 'POST':
+        nuevo_grupo = Grupo(nombre=request.POST['nombre'])
+        # Se hace responsable al usuario autenticado (La petición no devuelve el id de este)
+        nuevo_grupo.responsable_id = request.user.id
+        nuevo_grupo.save()
+
+        # Recorremos los usuarios seleccionados
+        for usuario_id in request.POST['ids']:
+            # Creamos una autoevaluación individual por cada usuario seleccionado
+            autoevaluacion_individual = Autoevaluacion(usuario_id=usuario_id, grupo_id=nuevo_grupo.id)
+            autoevaluacion_individual.save()
+
+        # Crear la evaluacion del usuario autenticado
+        autoevaluacion_responsable = Autoevaluacion(usuario_id=request.user.id, grupo_id=nuevo_grupo.id)
+        autoevaluacion_responsable.save()
 
     usuario_autenticado = User.objects.get(pk=request.user.id)
     grupos_supervisados = Grupo.objects.filter(responsable_id=usuario_autenticado.id)

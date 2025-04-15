@@ -96,10 +96,11 @@ def finalizar_individual(request: HttpRequest, autoevaluacion_id: int):
 
 @login_required
 def exportar(request: HttpRequest, autoevaluacion_id: int):
-    autoevaluacion = Autoevaluacion.objects.get(autoevaluacion_id=autoevaluacion_id)
-
+    autoevaluacion = Autoevaluacion.objects.get(
+        pk=autoevaluacion_id,
+        usuario_id=request.user.id
+    )
     pdf_file = PdfService.export_autoevaluacion(autoevaluacion)
-
     return FileResponse(
         pdf_file,
         as_attachment=True,

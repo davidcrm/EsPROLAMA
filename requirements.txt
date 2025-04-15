@@ -1,4 +1,4 @@
 django
 django_bootstrap5
 psycopg2-binary
-weasyprint
+xhtml2pdf

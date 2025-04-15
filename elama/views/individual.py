@@ -1,22 +1,35 @@
-from django.db.models.functions import Trim
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
+from django.db.models import Q
 from django.http import HttpRequest
 from elama.services.individual_service import IndividualService
-from elama.models import Estrategia, Principio, Descriptor, Autoevaluacion, Volcado
+from elama.models import Estrategia, Descriptor, Autoevaluacion, Volcado
 from elama.forms import VolcadoForm
-@login_required
-def crear_individual(_):
-    autoevaluacion = Autoevaluacion()  # Crea una nueva instancia de Autoevaluacion.
-    autoevaluacion.save()  # Guarda la autoevaluación en la base de datos.
-    return redirect('elama:individual', autoevaluacion_id=autoevaluacion.id)
 
 @login_required
-def nuevo_individual(request: HttpRequest, autoevaluacion_id: int):
-    autoevaluacion = get_object_or_404(Autoevaluacion, pk=autoevaluacion_id)
+def individual(request: HttpRequest):
+    if request.method == 'POST':
+        autoevaluacion = Autoevaluacion(usuario_id=request.user.id)
+        autoevaluacion.save()
+        return redirect('elama:individual-detail', autoevaluacion_id=autoevaluacion.id)
+
+    autoevaluaciones = (Autoevaluacion.objects
+                        .filter(usuario_id=request.user.id, grupo_id__isnull=True)
+                        .order_by("fecha_hora"))
+    return render(request, 'elama/individual.html', {
+      'autoevaluaciones': autoevaluaciones
+    })
+
+
+@login_required
+def detalle_individual(request: HttpRequest, autoevaluacion_id: int):
+    autoevaluacion = Autoevaluacion.objects.filter(
+        Q(pk=autoevaluacion_id),
+        Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
+    ).get()
     estrategias = Estrategia.objects.prefetch_related('principio_set__descriptor_set').all()
 
-    return render(request, 'elama/individual.html', {
+    return render(request, 'elama/detalle_individual.html', {
         'autoevaluacion': autoevaluacion,
         'estrategias': estrategias,
     })
@@ -24,7 +37,10 @@ def nuevo_individual(request: HttpRequest, autoevaluacion_id: int):
 @login_required
 def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descriptor_id: int):
     individual_service = IndividualService()
-    autoevaluacion = get_object_or_404(Autoevaluacion, pk=autoevaluacion_id)
+    autoevaluacion = Autoevaluacion.objects.filter(
+        Q(pk=autoevaluacion_id),
+        Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
+    ).get()
     descriptor = Descriptor.objects.prefetch_related("principio__descriptor_set").get(pk=descriptor_id)
 
     paginacion = individual_service.paginacion(descriptor)
@@ -43,7 +59,7 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
                 descriptor_id=paginacion['siguiente_descriptor'].id
             )
         else:
-            return redirect('elama:individual', autoevaluacion_id=autoevaluacion.id)
+            return redirect('individual-detail', autoevaluacion_id=autoevaluacion.id)
 
 
     volcado = Volcado.objects.filter(
@@ -66,10 +82,12 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
 
 # Vista para finalizar una autoevaluación, marcándola como finalizada.
 @login_required
-def finalizar_individual(_, autoevaluacion_id):
-    autoevaluacion = Autoevaluacion.objects.get(pk=autoevaluacion_id)
-
+def finalizar_individual(request: HttpRequest, autoevaluacion_id: int):
+    autoevaluacion = Autoevaluacion.objects.filter(
+        Q(pk=autoevaluacion_id),
+        Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
+    ).get()
     autoevaluacion.finalizada = True  # Marca la autoevaluación como finalizada.
     autoevaluacion.save()  # Guarda los cambios.
 
-    return redirect('elama:individual', autoevaluacion_id=autoevaluacion_id)  # Redirige a la vista individual.
+    return redirect('individual-detail', autoevaluacion_id=autoevaluacion_id)  # Redirige a la vista individual.

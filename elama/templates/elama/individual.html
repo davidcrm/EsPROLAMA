@@ -1,91 +1,15 @@
-{% extends "elama/base.html"  %}
-{% load django_bootstrap5 %}
+{% extends 'elama/base.html' %}
 
 {% block content %}
-    <h1 class="text-center">
-        Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
-        Migrantes Adultos (EsPROLAMA)
-    </h1>
 
-    <h3 class="mt-5 text-center">
-        AUTOEVALUACIÓN INDIVIDUAL
-        <a href="" class="btn btn-outline-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer"
-                 viewBox="0 0 16 16">
-                <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"></path>
-                <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2
-                         0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0
-                         0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0
-                         0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1">
-                </path>
-            </svg>
-        </a>
-    </h3>
-    {% if autoevaluacion.finalizada %}
-        <h6 class="text-center text-danger">FINALIZADA</h6>
-    {% else %}
-        <p class="text-center">
-            <a class="btn btn-success mt-2 {% if autoevaluacion.finalizada %} disabled {% endif %}"
-               href="" data-bs-toggle="modal" data-bs-target="#finalizarModal">Finalizar</a>
-        </p>
-    {% endif %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1>TUS EVALUACIONES</h1>
+    <form method="POST" action="{% url 'elama:individual' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-success">NUEVA EVALUACIÓN</button>
+    </form>
+  </div>
 
-    {% for e in estrategias %}
-        <h3 class="border-bottom mt-5">{{ e }}</h3>
+  {% include 'elama/components/tabla_autoevaluacion.html' with autoevaluaciones=autoevaluaciones %}
 
-        {% for p in e.principio_set.all %}
-            {% if p.descriptor_set.all|length > 0 and p.estrategia.id == e.id %}
-                <h4 class="mt-4">{{ p }}</h4>
-
-                {% for d in p.descriptor_set.all %}
-                    {% if d.principio.id == p.id %}
-                        {% if not d.descriptor_padre %}
-                            <h5 class="mt-2 ps-4">
-                                {% if d.contenido_html %}
-                                    <a href="{% url 'elama:individual-descriptor' autoevaluacion.id d.id %}">{{ d }}</a>
-                                {% else %}
-                                    {{ d }}
-                                {% endif %}
-                                {% if d.id in volcados_autoevaluacion %}
-                                    <span style="color: green">&check;</span>
-                                {% endif %}
-                            </h5>
-                        {% else %}
-                            <h6 class="mt-2 ps-5">
-                                {% if d.contenido_html %}
-                                     <a href="{% url 'elama:individual-descriptor' autoevaluacion.id d.id %}">{{ d }}</a>
-                                {% else %}
-                                    {{ d }}
-                                {% endif %}
-                                {% if d.id in volcados_autoevaluacion %}
-                                    <span style="color: green">&check;</span>
-                                {% endif %}
-                            </h6>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
-    {% endfor %}
-
-    <div class="modal fade" id="finalizarModal" tabindex="-1" aria-labelledby="finalizarModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!--<div class="modal-header">
-                    <h5 class="modal-title" id="finalizarModalLabel"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>-->
-                <div class="modal-body">
-                    <p>¿Quiere finalizar la autoevaluación?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <form action="{% url 'elama:finalizar-individual' autoevaluacion.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">Sí</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock content %}

@@ -1,0 +1,153 @@
+{% extends 'elama/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div>
+        <button type="button" class="d-flex btn btn-success mb-3" style="justify-self: end" data-bs-toggle="modal"
+                data-bs-target="#exampleModal">
+            NUEVA EVALUACIÓN
+        </button>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog d-flex justify-content-center align-items-center " style="min-height: 85vh">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Crea tu grupo</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="min-height: 400px;">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Nombre (opcional)</span>
+                            <input form="users-form" name="nombre" type="text" class="form-control"/>
+                        </div>
+
+                        <input id="search-user-input" type="search" class="form-control mb-3"
+                               placeholder="Buscar por nombre de usuario..."/>
+                        <div id="users-form-alerts"></div>
+                        <form id="users-form" action="{% url 'elama:grupal' %}" method="post">
+                            {% csrf_token %}
+                            <ul class="list-group" style="max-height: 300px; overflow-y: auto">
+                                {% for usuario in usuarios %}
+                                    <li class="list-group-item">
+                                        <div class="form-check">
+                                            <input name="ids" class="form-check-input border border-primary"
+                                                   type="checkbox"
+                                                   value="{{ usuario.id }}"/>
+                                            <label class="form-check-label" for="ids">
+                                                {% if usuario.first_name %}
+                                                    {{ usuario.first_name }} {{ usuario.last_name }}
+                                                {% else %}
+                                                    {{ usuario.username }}
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" style="width: 75px;" data-bs-dismiss="modal">
+                            Cerrar
+                        </button>
+                        <button type="submit" class="btn btn-primary" style="width: 75px;" form="users-form">Crear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="accordion accordion-flush" id="grupos-supervisados">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapse-grupos-supervisados" aria-expanded="false"
+                            aria-controls="flush-collapseOne">
+                        Autoevaluaciones supervisadas
+                    </button>
+                </h2>
+                <div id="flush-collapse-grupos-supervisados" class="accordion-collapse collapse"
+                     data-bs-parent="grupos-supervisados">
+                    <div class="accordion-body">
+                        {% for grupo in grupos_supervisados %}
+                            <div class="accordion accordion-flush" id="grupo-{{ grupo.id }}">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#flush-collapse-{{ grupo.id }}"
+                                                aria-expanded="false" aria-controls="flush-collapseOne">
+                                            {{ grupo }}
+                                        </button>
+                                    </h2>
+                                    <div id="flush-collapse-{{ grupo.id }}" class="accordion-collapse collapse"
+                                         data-bs-parent="grupo-{{ autoevaluacion.id }}">
+                                        <div class="accordion-body">
+                                            {% include 'elama/components/tabla_autoevaluacion.html' with autoevaluaciones=grupo.autoevaluacion_set.all show_user=True %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion accordion-flush" id="grupos-no-supervisados">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapse-grupos-no-supervisados" aria-expanded="false"
+                            aria-controls="flush-collapseOne">
+                        Autoevaluaciones no supervisadas
+                    </button>
+                </h2>
+                <div id="flush-collapse-grupos-no-supervisados" class="accordion-collapse collapse"
+                     data-bs-parent="grupos-no-supervisados">
+                    <div class="accordion-body">
+                        {% include 'elama/components/tabla_autoevaluacion.html' with autoevaluaciones=grupales_no_supervisadas show_group=True %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'js/debounce.js' %}"></script>
+    <script>
+        const usersForm = document.getElementById('users-form');
+        const usersFormAlerts = document.getElementById('users-form-alerts');
+        const searchInput = document.getElementById('search-user-input');
+        const listItems = document.querySelectorAll('.list-group-item');
+
+        searchInput.addEventListener('input', debounce(() => {
+            const filter = searchInput.value.toLowerCase();
+            listItems.forEach(item => {
+                const text = item.textContent || item.innerText;
+                item.style.display = text.toLowerCase().includes(filter) ? '' : 'none';
+            });
+        }, 300));
+
+        usersForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const selectedUsers = Array.from(usersForm.querySelectorAll('input[name="ids"]:checked'))
+                .map(input => Number(input.value))
+                .filter(value => !isNaN(value));
+
+            if (selectedUsers.length === 0) {
+                if (usersFormAlerts.children.length === 0) {
+                    usersFormAlerts.innerHTML = `
+            {% include 'elama/components/alerta.html' with tipo_alerta="danger" titulo="Error" contenido="Se debe seleccionar al menos un usuario." %}
+          `;
+                }
+                return;
+            }
+
+            usersForm.submit();
+        });
+    </script>
+{% endblock %}

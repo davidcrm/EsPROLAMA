@@ -23,14 +23,14 @@ class IndividualService:
 
         if siguiente_descriptor is None:
             siguiente_descriptor = descriptor
-        elif len(siguiente_descriptor.contenido_html.strip()) == 0:
+        elif siguiente_descriptor.contenido_html is None or len(siguiente_descriptor.contenido_html.strip()) == 0:
             siguiente_descriptor = self.buscar_descriptores_hijos(siguiente_descriptor.descriptor_set.all()).first()
 
         anterior_descriptor = descriptores.filter(id__lt=descriptor.id).last()
 
         if anterior_descriptor is None:
             anterior_descriptor = descriptor
-        elif len(anterior_descriptor.contenido_html.strip()) == 0:
+        elif anterior_descriptor.contenido_html is None or len(anterior_descriptor.contenido_html.strip()) == 0:
             anterior_descriptor = descriptores.filter(
                 id__lt=anterior_descriptor.id,
                 contenido_html__isnull=False

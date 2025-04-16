@@ -28,21 +28,23 @@
                 "
                 class="btn btn-outline-dark"
         >
-        {% comment %}
+            {% comment %}
             Botón ANTERIOR/SALIR
         {% endcomment %}
-            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-arrow-big-left">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"
+                 class="icon icon-tabler icons-tabler-filled icon-tabler-arrow-big-left">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M9.586 4l-6.586 6.586a2 2 0 0 0 0 2.828l6.586 6.586a2 2 0 0 0 2.18 .434l.145 -.068a2 2 0 0 0 1.089 -1.78v-2.586h7a2 2 0 0 0 2 -2v-4l-.005 -.15a2 2 0 0 0 -1.995 -1.85l-7 -.001v-2.585a2 2 0 0 0 -3.414 -1.414z" />
+                <path d="M9.586 4l-6.586 6.586a2 2 0 0 0 0 2.828l6.586 6.586a2 2 0 0 0 2.18 .434l.145 -.068a2 2 0 0 0 1.089 -1.78v-2.586h7a2 2 0 0 0 2 -2v-4l-.005 -.15a2 2 0 0 0 -1.995 -1.85l-7 -.001v-2.585a2 2 0 0 0 -3.414 -1.414z"/>
             </svg>
         </a>
         {% comment %}
             Botón SIGUIENTE/GUARDAR
         {% endcomment %}
         <button type="submit" id="siguiente" form="descriptor-form" class="btn btn-outline-dark">
-            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-arrow-big-right">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"
+                 class="icon icon-tabler icons-tabler-filled icon-tabler-arrow-big-right">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M12.089 3.634a2 2 0 0 0 -1.089 1.78l-.001 2.586h-6.999a2 2 0 0 0 -2 2v4l.005 .15a2 2 0 0 0 1.995 1.85l6.999 -.001l.001 2.587a2 2 0 0 0 3.414 1.414l6.586 -6.586a2 2 0 0 0 0 -2.828l-6.586 -6.586a2 2 0 0 0 -2.18 -.434l-.145 .068z" />
+                <path d="M12.089 3.634a2 2 0 0 0 -1.089 1.78l-.001 2.586h-6.999a2 2 0 0 0 -2 2v4l.005 .15a2 2 0 0 0 1.995 1.85l6.999 -.001l.001 2.587a2 2 0 0 0 3.414 1.414l6.586 -6.586a2 2 0 0 0 0 -2.828l-6.586 -6.586a2 2 0 0 0 -2.18 -.434l-.145 .068z"/>
             </svg>
         </button>
     </div>
@@ -60,11 +62,27 @@
         <h6 class="mt-2 ps-5">{{ descriptor.titulo }}</h6>
         <div class="mt-2 ps-5">{{ descriptor.contenido_html|safe }}</div>
     {% endif %}
-    <div class="d-flex align-items-center justify-content-center mt-5">
+    {% comment %}
+            Botón para el modal de información sobre las puntuaciones
+    {% endcomment %}
+    <div class="d-flex justify-content-end">
+        <button type="button" class="bg-transparent border-0 p-0 m-0 text-warning" data-bs-toggle="modal"
+                data-bs-target="#modalInformacionValores">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>
+                <path d="M12 9h.01"/>
+                <path d="M11 12h1v4h1"/>
+            </svg>
+        </button>
+    </div>
+    <div class="d-flex align-items-center justify-content-center mt-2">
         <form id="descriptor-form" action="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}"
               method="post">
             {% csrf_token %}
-            <div class="d-flex align-items-center gap-2" id="id_valoracion">
+            <div class="d-flex align-items-center gap-2 mb-5" id="id_valoracion">
                 {% for opcion in form.valoracion %}
                     <div>
                         <input
@@ -89,5 +107,66 @@
                 {% endfor %}
             </div>
         </form>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center m-auto justify-text" style="max-width: 75%; height: 50px">
+            <p id="valoracion-mensaje" class="mt-2 text-secondary" style="text-align: justify;"></p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const radios = document.querySelectorAll('input[name="valoracion"]');
+            const mensajeSeleccionado = document.getElementById("valoracion-mensaje");
+
+            const mensajes = {
+                1: "No os preocupéis. Lo importante es tomar conciencia y ponerse manos a la obra. Sois un equipo. ",
+                2: "Os felicitamos. Ya habéis empezado a trabajar en la dirección que que os va a llevar a construir un proyecto sólido. Todas las concreciones necesitan primeros pasos.",
+                3: "Felicidades, es importante reconocerse los logros. No dejéis de pensar si ese resultado es fruto de acciones que están consolidadas o de iniciativas puntuales. El trabajo en equipo y constante es el que os llevará mucho más lejos. No os olvidéis de implicar a toda la comunidad educativa de vuestra entidad. ",
+                4: "Enhorabuena. Vuestro programa responde a vuestras expectativas en relación a este principio. No obstante, seguro que queréis profundizar en vuestras prácticas, experimentar nuevas ideas y ensayar iniciativas que estén dando buenos resultados en otras entidades. ",
+            };
+
+            function actualizarMensaje() {
+                const seleccionado = document.querySelector('input[name="valoracion"]:checked');
+                if (seleccionado) {
+                    const valor = seleccionado.value;
+                    mensajeSeleccionado.textContent = mensajes[valor] || "";
+                }
+            }
+
+            radios.forEach(radio => {
+                radio.addEventListener("change", actualizarMensaje);
+            });
+
+            // Mostrar mensaje si ya hay un valor preseleccionado
+            actualizarMensaje();
+        });
+    </script>
+
+    {% comment %}
+            Modal de información sobre las puntuaciones
+    {% endcomment %}
+    <div class="modal fade" id="modalInformacionValores" tabindex="-1" aria-labelledby="modalInformacionValoresTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalInformacionValoresTitle">Significado de la escala</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ol class="ps-3">
+                        <li class="mb-2">Principio no concretado en acciones del programa.</li>
+                        <li class="mb-2">Principio concretado en acciones individuales o puntuales del programa.</li>
+                        <li class="mb-2">Principio concretado en acciones que realiza todo el equipo, aunque no sean
+                            periódicas o sistemáticas.
+                        </li>
+                        <li class="mb-2">Principio concretado en acciones que implican a todo el equipo y a la comunidad
+                            educativa en su conjunto, que se programan anualmente, y que son coherentes y están
+                            fundamentadas.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock content %}

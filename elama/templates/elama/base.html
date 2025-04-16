@@ -3,148 +3,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>EsPROLAMA</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>EsPROLAMA</title>
 
-  {% bootstrap_css %}
-  {% bootstrap_javascript %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
 
-  <style>
-      body {
-          display: grid;
-          grid-template-rows: auto 1fr auto;
-          min-height: 100vh;
-      }
-  </style>
+    <style>
+        body {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            min-height: 100vh;
+        }
+    </style>
 
-  {% block styles %}{% endblock %}
+    {% block styles %}{% endblock %}
 </head>
 
 <body>
 <nav class="navbar w-100 px-3 mb-4 border">
-  {% if show_home %}
-    <p>Moro</p>
-  {% endif %}
-  {% if user.is_authenticated %}
-    <a class="navbar-brand" href="{% url 'elama:home' %}">EsPROLAMA</a>
-  {% else %}
-    <a class="navbar-brand" href="{% url 'elama:login' %}">EsPROLAMA</a>
-  {% endif %}
-
-  <div class="d-flex align-items-center">
-    <div class="dropdown">
-      <button class="btn dropdown-toggle" style="border: none;" type="button" id="themeDropdownMenuButton"
-              data-bs-toggle="dropdown" aria-expanded="false">
-      </button>
-      <ul id="themeDropdownMenu" class="dropdown-menu" style="left: -92px;"
-          aria-labelledby="themeDropdownMenuButton">
-        <li>
-          <a class="dropdown-item" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                 class="icon icon-tabler icons-tabler-outline icon-tabler-sun">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/>
-              <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/>
-            </svg>
-            <span>Claro</span>
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                 class="icon icon-tabler icons-tabler-outline icon-tabler-moon-stars">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/>
-              <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"/>
-              <path d="M19 11h2m-1 -1v2"/>
-            </svg>
-            <span>Oscuro</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-    {% if user.is_authenticated %}
-      <span class="navbar-text">Hola, <span style="font-weight: bold">{{ user.username }}</span>.</span>
-      <form action="{% url 'elama:logout' %}" class="form ms-2">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-outline-dark">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-               class="icon icon-tabler icons-tabler-outline icon-tabler-logout">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/>
-            <path d="M9 12h12l-3 -3"/>
-            <path d="M18 15l3 -3"/>
-          </svg>
-        </button>
-      </form>
+    {% if show_home %}
+        <p>Moro</p>
     {% endif %}
-  </div>
+    {% if user.is_authenticated %}
+        <a class="navbar-brand" href="{% url 'elama:home' %}">EsPROLAMA</a>
+    {% else %}
+        <a class="navbar-brand" href="{% url 'elama:login' %}">EsPROLAMA</a>
+    {% endif %}
+
+    <div class="d-flex align-items-center">
+        <div class="dropdown">
+            <button class="btn dropdown-toggle" style="border: none;" type="button" id="themeDropdownMenuButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+            </button>
+            <ul id="themeDropdownMenu" class="dropdown-menu" style="left: -92px;"
+                aria-labelledby="themeDropdownMenuButton">
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="icon icon-tabler icons-tabler-outline icon-tabler-sun">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/>
+                            <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/>
+                        </svg>
+                        <span>Claro</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="icon icon-tabler icons-tabler-outline icon-tabler-moon-stars">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/>
+                            <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"/>
+                            <path d="M19 11h2m-1 -1v2"/>
+                        </svg>
+                        <span>Oscuro</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        {% if user.is_authenticated %}
+            <span class="navbar-text">Hola, <span style="font-weight: bold">{{ user.username }}</span>.</span>
+            <form action="{% url 'elama:logout' %}" class="form ms-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-dark">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="icon icon-tabler icons-tabler-outline icon-tabler-logout">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/>
+                        <path d="M9 12h12l-3 -3"/>
+                        <path d="M18 15l3 -3"/>
+                    </svg>
+                </button>
+            </form>
+        {% endif %}
+    </div>
 </nav>
 
 <main role="main" class="container">
-  {% block content %} {% endblock content %}
+    {% block content %} {% endblock content %}
 </main>
 
-<footer class="mt-5 pt-5 pb-2">
-  <p class="text-center">
-    Desarrollada por <a class="btn btn-outline-dark" href="" data-bs-toggle="modal" data-bs-target="#equipoModal">
-    alumnado</a> del CFGS en Desarrollo de Aplicaciones Multiplataforma del IES Lomo de La Herradura
-    (promoción 2023-2025).
-  </p>
+<footer class="mt-2 pt-5 pb-2">
+    <p class="text-center">
+        Desarrollada por <a class="btn btn-outline-dark" href="" data-bs-toggle="modal" data-bs-target="#equipoModal">
+        alumnado</a> del CFGS en Desarrollo de Aplicaciones Multiplataforma del IES Lomo de La Herradura
+        (promoción 2023-2025).
+    </p>
 </footer>
 
 <div class="modal fade" id="equipoModal" tabindex="-1" aria-labelledby="equipoModalLabel" aria-hidden="true">
-  <div class="modal-dialog d-flex justify-content-center align-items-center " style="min-height: 85vh">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="equipoModalLabel">Equipo de desarrolladores</h5>
-        <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-      </div>
-      <div class="modal-body">
-        <ul>
-          <li>Alberto Arranz Romano.</li>
-          <li>David Carreño Macías.</li>
-          <li>Pablo Suárez Ben-Mohand.</li>
-        </ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
+    <div class="modal-dialog d-flex justify-content-center align-items-center " style="min-height: 85vh">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="equipoModalLabel">Equipo de desarrolladores</h5>
+                <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Alberto Arranz Romano.</li>
+                    <li>David Carreño Macías.</li>
+                    <li>Pablo Suárez Ben-Mohand.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const themeBtn = document.getElementById('themeDropdownMenuButton');
-    const equipoModalBtn = document.querySelector('a[data-bs-target="#equipoModal"]');
-    const [lightIcon, darkIcon] = document.querySelectorAll('#themeDropdownMenu svg');
+    document.addEventListener('DOMContentLoaded', () => {
+        const themeBtn = document.getElementById('themeDropdownMenuButton');
+        const equipoModalBtn = document.querySelector('a[data-bs-target="#equipoModal"]');
+        const [lightIcon, darkIcon] = document.querySelectorAll('#themeDropdownMenu svg');
 
-    const setTheme = (theme) => {
-      document.documentElement.dataset.bsTheme = theme;
-      localStorage.setItem('theme', theme);
-      themeBtn.innerHTML = (theme === 'dark' ? darkIcon : lightIcon).outerHTML;
-      equipoModalBtn.classList.remove('btn-outline-light', 'btn-outline-dark');
-      equipoModalBtn.classList.add(theme === 'dark' ? 'btn-outline-light' : 'btn-outline-dark');
-      // Update Theme Based Classes
-      const themeBasedElements = document.querySelectorAll(
-        '.btn-light, .btn-dark, .btn-outline-light, .btn-outline-dark'
-      );
+        const setTheme = (theme) => {
+            document.documentElement.dataset.bsTheme = theme;
+            localStorage.setItem('theme', theme);
+            themeBtn.innerHTML = (theme === 'dark' ? darkIcon : lightIcon).outerHTML;
+            equipoModalBtn.classList.remove('btn-outline-light', 'btn-outline-dark');
+            equipoModalBtn.classList.add(theme === 'dark' ? 'btn-outline-light' : 'btn-outline-dark');
+            // Update Theme Based Classes
+            const themeBasedElements = document.querySelectorAll(
+                '.btn-light, .btn-dark, .btn-outline-light, .btn-outline-dark'
+            );
 
-      themeBasedElements.forEach(themeBasedElement => {
-        const currentClasses = Array.from(themeBasedElement.classList).join(' ');
-        themeBasedElement.className = currentClasses.replaceAll(theme, theme === 'light' ? 'dark' : 'light');
-      });
-    };
+            themeBasedElements.forEach(themeBasedElement => {
+                const currentClasses = Array.from(themeBasedElement.classList).join(' ');
+                themeBasedElement.className = currentClasses.replaceAll(theme, theme === 'light' ? 'dark' : 'light');
+            });
+        };
 
-    setTheme(localStorage.getItem('theme') || 'light');
+        setTheme(localStorage.getItem('theme') || 'light');
 
-    lightIcon.closest('a').addEventListener('click', () => setTheme('light'));
-    darkIcon.closest('a').addEventListener('click', () => setTheme('dark'));
-  });
+        lightIcon.closest('a').addEventListener('click', () => setTheme('light'));
+        darkIcon.closest('a').addEventListener('click', () => setTheme('dark'));
+    });
 </script>
 {% block scripts %}{% endblock %}
 </body>

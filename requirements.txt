@@ -1,3 +1,5 @@
-django
+django~=5.1.7
 django_bootstrap5
 psycopg2-binary
+
+xhtml2pdf~=0.2.17

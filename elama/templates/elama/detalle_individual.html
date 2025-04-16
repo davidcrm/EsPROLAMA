@@ -32,19 +32,19 @@
     </p>
   {% endif %}
 
-  {% for e in estrategias %}
-    <h3 class="border-bottom mt-5">{{ e }}</h3>
+  {% for estrategia in estrategias %}
+    <h3 class="border-bottom mt-5">{{ estrategia }}</h3>
 
-    {% for p in e.principio_set.all %}
-      {% if p.descriptor_set.all|length > 0 and p.estrategia.id == e.id %}
-        <h4 class="mt-4">{{ p }}</h4>
+    {% for principio in estrategia.principio_set.all %}
+      {% if principio.descriptor_set.all|length > 0 and principio.estrategia.id == estrategia.id %}
+        <h4 class="mt-4">{{ principio }}</h4>
 
-        {% for descriptor in p.descriptor_set.all %}
-          {% if descriptor.principio.id == p.id %}
+        {% for descriptor in principio.descriptor_set.all %}
+          {% if descriptor.principio.id == principio.id %}
             {% if not descriptor.descriptor_padre %}
               <h5 class="mt-2 ps-4">
                 {% if descriptor.contenido_html %}
-                  <a href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
+                  <a class="link link-success" href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
                 {% else %}
                   {{ descriptor }}
                 {% endif %}
@@ -55,7 +55,7 @@
             {% else %}
               <h6 class="mt-2 ps-5">
                 {% if descriptor.contenido_html %}
-                  <a href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
+                  <a class="link link-success" href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
                 {% else %}
                   {{ descriptor }}
                 {% endif %}

@@ -3,7 +3,10 @@
 {% load descriptor_filters %}
 
 {% block content %}
-  <a class="btn btn-outline-success mb-3" href="{% url 'elama:individual' %}">
+    {% comment %}
+        Botón HOME
+    {% endcomment %}
+  <a class="btn btn-outline-dark mb-3" href="{% url 'elama:individual' %}">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill"
          viewBox="0 0 16 16">
       <path

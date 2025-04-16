@@ -30,10 +30,11 @@ def detalle_individual(request: HttpRequest, autoevaluacion_id: int):
         Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
     ).get()
     estrategias = Estrategia.objects.prefetch_related('principio_set__descriptor_set').all()
-
+    volcados = Volcado.objects.filter(autoevaluacion_id=autoevaluacion_id)
     return render(request, 'elama/detalle_individual.html', {
         'autoevaluacion': autoevaluacion,
         'estrategias': estrategias,
+        'volcados': volcados
     })
 
 @login_required
@@ -61,7 +62,7 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
                 descriptor_id=paginacion['siguiente_descriptor'].id
             )
         else:
-            return redirect('individual-detail', autoevaluacion_id=autoevaluacion.id)
+            return redirect('elama:individual-detail', autoevaluacion_id=autoevaluacion.id)
 
 
     volcado = Volcado.objects.filter(
@@ -92,7 +93,7 @@ def finalizar_individual(request: HttpRequest, autoevaluacion_id: int):
     autoevaluacion.finalizada = True  # Marca la autoevaluación como finalizada.
     autoevaluacion.save()  # Guarda los cambios.
 
-    return redirect('individual-detail', autoevaluacion_id=autoevaluacion_id)  # Redirige a la vista individual.
+    return redirect('elama:individual-detail', autoevaluacion_id=autoevaluacion_id)  # Redirige a la vista individual.
 
 @login_required
 def exportar(request: HttpRequest, autoevaluacion_id: int):

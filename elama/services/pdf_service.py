@@ -25,12 +25,12 @@ class PdfService:
 
         for estrategia in estrategias:
             html_string += f"""
-                <h4>{estrategia.titulo}</h4>
+                <h2>{estrategia.titulo}</h2>
                 <ul>
             """
             for principio in estrategia.principio_set.all():
                 html_string += f"""
-                    <li>{principio.titulo}</li>
+                    <li><h3>{principio.titulo}</h3></li>
                     <ul>
                 """
                 for descriptor in principio.descriptor_set.all():
@@ -40,10 +40,11 @@ class PdfService:
                     else:
                         puntos = titulo.count('.')
                     padding_left = 8 if puntos > 2 else 0
-                    # TODO: Añadir el valor del descriptor (volcado)
+
+                    volcado = descriptor.volcado_set.filter(autoevaluacion_id=autoevaluacion.id).first()
                     html_string += f"""
                         <li style="padding-left: {padding_left * puntos}px;">
-                            {descriptor.titulo}
+                            {descriptor.titulo}  {f" &#10132; <strong>{volcado.valoracion}</strong>" if volcado else ''}
                         </li>
                     """
                 html_string += "</ul>"

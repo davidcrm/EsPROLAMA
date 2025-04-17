@@ -11,27 +11,6 @@
         .hover-zoom:hover {
             transform: scale(1.05);
         }
-
-        .info-overlay {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 6px 12px;
-            border-radius: 1rem;
-            display: flex;
-            align-items: center;
-            font-size: 0.9rem;
-            pointer-events: none;
-        }
-
-        .hover-zoom:hover .info-overlay {
-            opacity: 1;
-        }
     </style>
 {% endblock %}
 {% block content %}
@@ -61,7 +40,7 @@
                 <div class="d-flex justify-content-start">
                     <button type="button" class="bg-transparent border-0 p-0 m-0 text-warning"
                             data-bs-toggle="modal"
-                            data-bs-target="#modalInformacionValores">
+                            data-bs-target="#modalInformacionIndividual">
                         <div class="shadow-lg hover-zoom">
                             <!-- imagen del genially-->
                             <!--<img src="https://img.genial.ly/6372606ba56ad8001106c310/8273afd2-c207-48da-895f-b35e469858d8.jpeg"
@@ -107,6 +86,88 @@
                     </button>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    {% comment %}
+            Modal de información Trabajo individual
+    {% endcomment %}
+    <div class="modal fade" id="modalInformacionIndividual" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalInformacionValoresTitle">Trabajo Individual</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Se propone que, de manera individual, las personas que quieran analizar el Programa de ELAMA en
+                        el que participan, hagan una autoevaluación individual a partir de los 11 principios que se
+                        proponen.
+                    </p>
+
+                    <p>Esta autoevaluación requiere dos fases:</p>
+                    <ul>
+                        <li>
+                            <strong>La PRIMERA</strong> implica familiarizarse con el contenido de los aspectos que se
+                            consideran a partir de unas preguntas de reflexión, acceder a documentación de referencia y
+                            contar un ejemplo de un posible proyecto de acción.
+                        </li>
+                        <li>
+                            <strong>La SEGUNDA</strong> requiere la autoevaluación de los principios que se proponen a
+                            partir de <strong>DESCRIPTORES</strong> asociados a cada uno de ellos. Además de aplicar
+                            para cada descriptor una escala del 1-4, se ha de identificar, al menos, un logro y una
+                            mejora para cada uno de ellos. Finalizada la autoevaluación de cada principio, el sistema
+                            recupera la autoevaluación realizada, permite la introducción de ajustes y la selección de
+                            los comentarios que se consideren más relevantes.
+                        </li>
+                    </ul>
+
+                    <p>
+                        Antes de realizar la autoevaluación, se ha de decidir qué aspectos se quieren revisar del
+                        Programa de ELAMA. Se puede trabajar con todos los principios que se proponen o solo con algunos
+                        de ellos.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% comment %}
+            Modal de información Trabajo Grupal
+    {% endcomment %}
+    <div class="modal fade" id="modalInformacionGrupal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalInformacionValoresTitle">Trabajo Grupal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Se propone que la entidad que quiera hacer un trabajo colaborativo para identificar logros y
+                        posibles mejoras de su Programa de ELAMA a partir del uso de esta herramienta, constituya un
+                        grupo de trabajo, integrado entre 3 y 9 personas.
+                    </p>
+
+                    <p>
+                        Antes de realizar la autoevaluación, se ha de decidir qué aspectos se quieren revisar del
+                        Programa de ELAMA. Se puede trabajar con todos los principios que se proponen o seleccionar solo
+                        algunos de ellos. Asimismo, se ha de decidir qué personas se encargarán del análisis de cada
+                        principio. Se recomienda que, al menos, dos personas realicen el análisis de un mismo principio,
+                        para que puedan contrastar sus conclusiones.
+                    </p>
+
+                    <p>
+                        Una vez concluida la autoevaluación individual, las personas del grupo de trabajo se reunirán
+                        para compartir los resultados de la autoevaluación y tomar decisiones sobre mejoras que se
+                        pueden implementar en el Programa de ELAMA.
+                    </p>
+
+
+                </div>
             </div>
         </div>
     </div>

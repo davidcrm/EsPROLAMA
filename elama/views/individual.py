@@ -31,6 +31,7 @@ def detalle_individual(request: HttpRequest, autoevaluacion_id: int):
     ).get()
     estrategias = Estrategia.objects.prefetch_related('principio_set__descriptor_set').all()
     volcados = Volcado.objects.filter(autoevaluacion_id=autoevaluacion_id)
+
     return render(request, 'elama/detalle_individual.html', {
         'autoevaluacion': autoevaluacion,
         'estrategias': estrategias,

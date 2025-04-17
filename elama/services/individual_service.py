@@ -7,30 +7,29 @@ from elama.forms import VolcadoForm
 
 class IndividualService:
     def paginacion(self, descriptor: Descriptor):
-        descriptores = Descriptor.objects.all()
+        descriptores = Descriptor.objects.all().order_by("id")
 
-        # Obtener el primer y último descriptor para poder manejar el "Volver" y "Guardar" de la paginación
         primer_descriptor = descriptores.first()
         ultimo_descriptor = descriptores.last()
 
-        if primer_descriptor.descriptor_set.count() > 0:
+        if self.contenido_html_vacio(primer_descriptor):
             primer_descriptor = self.buscar_descriptores_hijos(primer_descriptor.descriptor_set.all()).first()
 
-        if ultimo_descriptor.descriptor_set.count() > 0:
+        if self.contenido_html_vacio(ultimo_descriptor):
             ultimo_descriptor = self.buscar_descriptores_hijos(ultimo_descriptor.descriptor_set.all()).last()
 
         siguiente_descriptor = descriptores.filter(id__gt=descriptor.id).first()
 
         if siguiente_descriptor is None:
             siguiente_descriptor = descriptor
-        elif siguiente_descriptor.contenido_html is None or len(siguiente_descriptor.contenido_html.strip()) == 0:
+        elif self.contenido_html_vacio(siguiente_descriptor):
             siguiente_descriptor = self.buscar_descriptores_hijos(siguiente_descriptor.descriptor_set.all()).first()
 
         anterior_descriptor = descriptores.filter(id__lt=descriptor.id).last()
 
         if anterior_descriptor is None:
             anterior_descriptor = descriptor
-        elif anterior_descriptor.contenido_html is None or len(anterior_descriptor.contenido_html.strip()) == 0:
+        elif self.contenido_html_vacio(anterior_descriptor):
             anterior_descriptor = descriptores.filter(
                 id__lt=anterior_descriptor.id,
                 contenido_html__isnull=False
@@ -43,6 +42,12 @@ class IndividualService:
             'anterior_descriptor': anterior_descriptor,
         }
 
+    def contenido_html_vacio(self, descriptor: Optional[Descriptor]):
+        if descriptor is None:
+            return True
+        elif descriptor.contenido_html is None or len(descriptor.contenido_html.strip()) == 0:
+            return True
+        return False
 
     def buscar_descriptores_hijos(self, descriptores: Optional[QuerySet]):
         if descriptores is None or descriptores.count() == 0:

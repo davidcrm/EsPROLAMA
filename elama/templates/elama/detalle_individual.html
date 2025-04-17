@@ -3,7 +3,7 @@
 {% load descriptor_filters %}
 
 {% block content %}
-    {% comment %}
+  {% comment %}
         Botón HOME
     {% endcomment %}
   <a class="btn btn-outline-dark mb-3" href="{% url 'elama:individual' %}">
@@ -32,41 +32,30 @@
     </p>
   {% endif %}
 
-  {% for estrategia in estrategias %}
-    <h3 class="border-bottom mt-5">{{ estrategia }}</h3>
-
-    {% for principio in estrategia.principio_set.all %}
-      {% if principio.descriptor_set.all|length > 0 and principio.estrategia.id == estrategia.id %}
-        <h4 class="mt-4">{{ principio }}</h4>
-
-        {% for descriptor in principio.descriptor_set.all %}
-          {% if descriptor.principio.id == principio.id %}
-            {% if not descriptor.descriptor_padre %}
-              <h5 class="mt-2 ps-4">
-                {% if descriptor.contenido_html %}
-                  <a class="link link-success" href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
-                {% else %}
-                  {{ descriptor }}
-                {% endif %}
-                {% if descriptor|descriptor_in_volcado:volcados %}
-                  <span style="color: green">&check;</span>
-                {% endif %}
-              </h5>
-            {% else %}
-              <h6 class="mt-2 ps-5">
-                {% if descriptor.contenido_html %}
-                  <a class="link link-success" href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
-                {% else %}
-                  {{ descriptor }}
-                {% endif %}
-                {% if descriptor|descriptor_in_volcado:volcados %}
-                  <span style="color: green">&check;</span>
-                {% endif %}
-              </h6>
-            {% endif %}
+  {% for estrategia in estrategias|dictsort:'id' %}
+    <h3 class="border-bottom mt-5">{{ estrategia.titulo }}</h3>
+    {% for principio in estrategia.principio_set.all|dictsort:'titulo' %}
+      <h4 class="mt-4">{{ principio.titulo }}</h4>
+      {% for descriptor in principio.descriptor_set.all|dictsort:'titulo' %}
+        <h5
+          class="mt-2"
+          {% if not descriptor.descriptor_padre %}
+          style="padding-left: 24px;"
+          {% else %}
+          style="padding-left: {{ descriptor|descriptor_identacion }}px;"
           {% endif %}
-        {% endfor %}
-      {% endif %}
+        >
+          {% if descriptor|descriptor_contenido_vacio %}
+            {{ descriptor.titulo }}
+          {% else %}
+            <a class="link link-success"
+               href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
+          {% endif %}
+          {% if descriptor|descriptor_in_volcado:volcados %}
+            <span style="color: green">&check;</span>
+          {% endif %}
+        </h5>
+      {% endfor %}
     {% endfor %}
   {% endfor %}
 

@@ -125,7 +125,7 @@
                 4: "Enhorabuena. Vuestro programa responde a vuestras expectativas en relación a este principio. No obstante, seguro que queréis profundizar en vuestras prácticas, experimentar nuevas ideas y ensayar iniciativas que estén dando buenos resultados en otras entidades. ",
             };
 
-            function actualizarMensaje() {
+            const actualizarMensaje = () => {
                 const seleccionado = document.querySelector('input[name="valoracion"]:checked');
                 if (seleccionado) {
                     const valor = seleccionado.value;

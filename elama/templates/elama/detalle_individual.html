@@ -44,7 +44,7 @@
             {% if not descriptor.descriptor_padre %}
               <h5 class="mt-2 ps-4">
                 {% if descriptor.contenido_html %}
-                  <a class="link-success" href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
+                  <a class="link link-success" href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
                 {% else %}
                   {{ descriptor }}
                 {% endif %}
@@ -55,7 +55,7 @@
             {% else %}
               <h6 class="mt-2 ps-5">
                 {% if descriptor.contenido_html %}
-                  <a class="link-success" href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
+                  <a class="link link-success" href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
                 {% else %}
                   {{ descriptor }}
                 {% endif %}

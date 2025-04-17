@@ -34,9 +34,9 @@
 
     {% for estrategia in estrategias|dictsort:'id' %}
         <h3 class="border-bottom mt-5">{{ estrategia.titulo }}</h3>
-        {% for principio in estrategia.principio_set.all|dictsort:'titulo' %}
+        {% for principio in estrategia.principio_set.all|dictsort:'id' %}
             <h4 class="mt-4">{{ principio.titulo }}</h4>
-            {% for descriptor in principio.descriptor_set.all|dictsort:'titulo' %}
+            {% for descriptor in principio.descriptor_set.all|dictsort:'id' %}
                 <h5
                     class="mt-2"
                     {% if not descriptor.descriptor_padre %}

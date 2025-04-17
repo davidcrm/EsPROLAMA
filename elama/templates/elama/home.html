@@ -26,7 +26,11 @@
         <div class="row justify-content-center">
             <div class="col-3 text-center">
                 <p>
-                    <a class="btn btn-outline-dark" href="{% url 'elama:individual' %}">
+                    <a
+                        href="{% url 'elama:individual' %}"
+                        class="d-flex align-items-center justify-content-center gap-1 mx-auto btn btn-outline-dark"
+                        style="max-width: 225px;"
+                    >
                         TRABAJO INDIVIDUAL
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -46,6 +50,7 @@
                             <!--<img src="https://img.genial.ly/6372606ba56ad8001106c310/8273afd2-c207-48da-895f-b35e469858d8.jpeg"
                                  width="100%">-->
                             <img src="{% static 'trabajo-individual.jpg' %}"
+                                 class="rounded-1"
                                  alt="Imagen que muestra a un hombre escribiendo en un bloc de notas. A su derecha, tiene un portátil."
                                  width="100%">
                         </div>
@@ -55,7 +60,11 @@
             </div>
             <div class="col-3 text-center">
                 <p>
-                    <a class="btn btn-outline-dark" href={% url 'elama:grupal' %}>
+                    <a
+                        href="{% url 'elama:grupal' %}"
+                        class="d-flex align-items-center justify-content-center mx-auto btn btn-outline-dark gap-1"
+                        style="max-width: 225px;"
+                    >
                         TRABAJO EN GRUPO
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -79,7 +88,7 @@
                             <!-- imagen del genially-->
                             <!---<img src="https://img.genial.ly/6372606ba56ad8001106c310/1d7781bb-73d9-452b-a0f0-c5bcdf8007f1.jpeg"
                                  width="100%">-->
-                            <img class="zoom-hover transition " src="{% static 'trabajo-grupo.jpg' %}"
+                            <img class="zoom-hover transition rounded-1" src="{% static 'trabajo-grupo.jpg' %}"
                                  alt="Imagen que muestra la unión de cinco puños de cinco personas en señal de ser un equipo."
                                  width="100%">
                         </div>

@@ -1,6 +1,18 @@
-{% extends "elama/base.html"  %}
+{% extends "elama/base.html" %}
 {% load django_bootstrap5 %}
+{% block styles %}
+    <style>
+        .hover-zoom {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
 
+        .hover-zoom:hover {
+            transform: scale(1.05);
+        }
+    </style>
+{% endblock %}
 {% block content %}
     <h1 class="text-center">
         Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
@@ -14,26 +26,156 @@
         <div class="row justify-content-center">
             <div class="col-3 text-center">
                 <p>
-                    <a class="btn btn-outline-primary" href="{% url 'elama:individual' %}">TRABAJO INDIVIDUAL</a>
+                    <a
+                        href="{% url 'elama:individual' %}"
+                        class="d-flex align-items-center justify-content-center gap-1 mx-auto btn btn-outline-dark"
+                        style="max-width: 225px;"
+                    >
+                        TRABAJO INDIVIDUAL
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
+                            <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
+                        </svg>
+                    </a>
                 </p>
-                <div class="shadow-lg">
-                    <!--<img src="https://img.genial.ly/6372606ba56ad8001106c310/8273afd2-c207-48da-895f-b35e469858d8.jpeg"
-                         width="100%">-->
-                    <img src="{% static 'trabajo-individual.jpg' %}"
-                         alt="Imagen que muestra a un hombre escribiendo en un bloc de notas. A su derecha, tiene un portátil."
-                         width="100%">
+                <div class="d-flex justify-content-start">
+                    <button type="button" class="bg-transparent border-0 p-0 m-0 text-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalInformacionIndividual">
+                        <div class="shadow-lg hover-zoom">
+                            <!-- imagen del genially-->
+                            <!--<img src="https://img.genial.ly/6372606ba56ad8001106c310/8273afd2-c207-48da-895f-b35e469858d8.jpeg"
+                                 width="100%">-->
+                            <img src="{% static 'trabajo-individual.jpg' %}"
+                                 class="rounded-1"
+                                 alt="Imagen que muestra a un hombre escribiendo en un bloc de notas. A su derecha, tiene un portátil."
+                                 width="100%">
+                        </div>
+                    </button>
                 </div>
+
             </div>
             <div class="col-3 text-center">
                 <p>
-                    <a class="btn btn-outline-primary" href={% url 'elama:grupal' %}>TRABAJO EN GRUPO</a>
+                    <a
+                        href="{% url 'elama:grupal' %}"
+                        class="d-flex align-items-center justify-content-center mx-auto btn btn-outline-dark gap-1"
+                        style="max-width: 225px;"
+                    >
+                        TRABAJO EN GRUPO
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="icon icon-tabler icons-tabler-outline icon-tabler-users-group">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/>
+                            <path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1"/>
+                            <path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/>
+                            <path d="M17 10h2a2 2 0 0 1 2 2v1"/>
+                            <path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/>
+                            <path d="M3 13v-1a2 2 0 0 1 2 -2h2"/>
+                        </svg>
+                    </a>
                 </p>
-                <div class="shadow-lg">
-                    <!---<img src="https://img.genial.ly/6372606ba56ad8001106c310/1d7781bb-73d9-452b-a0f0-c5bcdf8007f1.jpeg"
-                         width="100%">-->
-                    <img src="{% static 'trabajo-grupo.jpg' %}"
-                         alt="Imagen que muestra la unión de cinco puños de cinco personas en señal de ser un equipo."
-                         width="100%">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="bg-transparent border-0 p-0 m-0 text-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalInformacionGrupal"
+                    >
+                        <div class="shadow-lg hover-zoom">
+                            <!-- imagen del genially-->
+                            <!---<img src="https://img.genial.ly/6372606ba56ad8001106c310/1d7781bb-73d9-452b-a0f0-c5bcdf8007f1.jpeg"
+                                 width="100%">-->
+                            <img class="zoom-hover transition rounded-1" src="{% static 'trabajo-grupo.jpg' %}"
+                                 alt="Imagen que muestra la unión de cinco puños de cinco personas en señal de ser un equipo."
+                                 width="100%">
+                        </div>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {% comment %}
+            Modal de información Trabajo individual
+    {% endcomment %}
+    <div class="modal fade" id="modalInformacionIndividual" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalInformacionValoresTitle">Trabajo Individual</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Se propone que, de manera individual, las personas que quieran analizar el Programa de ELAMA en
+                        el que participan, hagan una autoevaluación individual a partir de los 11 principios que se
+                        proponen.
+                    </p>
+
+                    <p>Esta autoevaluación requiere dos fases:</p>
+                    <ul>
+                        <li>
+                            <strong>La PRIMERA</strong> implica familiarizarse con el contenido de los aspectos que se
+                            consideran a partir de unas preguntas de reflexión, acceder a documentación de referencia y
+                            contar un ejemplo de un posible proyecto de acción.
+                        </li>
+                        <li>
+                            <strong>La SEGUNDA</strong> requiere la autoevaluación de los principios que se proponen a
+                            partir de <strong>DESCRIPTORES</strong> asociados a cada uno de ellos. Además de aplicar
+                            para cada descriptor una escala del 1-4, se ha de identificar, al menos, un logro y una
+                            mejora para cada uno de ellos. Finalizada la autoevaluación de cada principio, el sistema
+                            recupera la autoevaluación realizada, permite la introducción de ajustes y la selección de
+                            los comentarios que se consideren más relevantes.
+                        </li>
+                    </ul>
+
+                    <p>
+                        Antes de realizar la autoevaluación, se ha de decidir qué aspectos se quieren revisar del
+                        Programa de ELAMA. Se puede trabajar con todos los principios que se proponen o solo con algunos
+                        de ellos.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% comment %}
+            Modal de información Trabajo Grupal
+    {% endcomment %}
+    <div class="modal fade" id="modalInformacionGrupal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalInformacionValoresTitle">Trabajo Grupal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Se propone que la entidad que quiera hacer un trabajo colaborativo para identificar logros y
+                        posibles mejoras de su Programa de ELAMA a partir del uso de esta herramienta, constituya un
+                        grupo de trabajo, integrado entre 3 y 9 personas.
+                    </p>
+
+                    <p>
+                        Antes de realizar la autoevaluación, se ha de decidir qué aspectos se quieren revisar del
+                        Programa de ELAMA. Se puede trabajar con todos los principios que se proponen o seleccionar solo
+                        algunos de ellos. Asimismo, se ha de decidir qué personas se encargarán del análisis de cada
+                        principio. Se recomienda que, al menos, dos personas realicen el análisis de un mismo principio,
+                        para que puedan contrastar sus conclusiones.
+                    </p>
+
+                    <p>
+                        Una vez concluida la autoevaluación individual, las personas del grupo de trabajo se reunirán
+                        para compartir los resultados de la autoevaluación y tomar decisiones sobre mejoras que se
+                        pueden implementar en el Programa de ELAMA.
+                    </p>
+
+
                 </div>
             </div>
         </div>

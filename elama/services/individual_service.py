@@ -45,9 +45,7 @@ class IndividualService:
     def contenido_html_vacio(self, descriptor: Optional[Descriptor]):
         if descriptor is None:
             return True
-        elif descriptor.contenido_html is None or len(descriptor.contenido_html.strip()) == 0:
-            return True
-        return False
+        return descriptor.contenido_html is None or len(descriptor.contenido_html.strip()) == 0
 
     def buscar_descriptores_hijos(self, descriptores: Optional[QuerySet]):
         if descriptores is None or descriptores.count() == 0:

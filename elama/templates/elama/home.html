@@ -1,6 +1,39 @@
-{% extends "elama/base.html"  %}
+{% extends "elama/base.html" %}
 {% load django_bootstrap5 %}
+{% block styles %}
+    <style>
+        .hover-zoom {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
 
+        .hover-zoom:hover {
+            transform: scale(1.05);
+        }
+
+        .info-overlay {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 6px 12px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .hover-zoom:hover .info-overlay {
+            opacity: 1;
+        }
+    </style>
+{% endblock %}
 {% block content %}
     <h1 class="text-center">
         Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
@@ -14,27 +47,66 @@
         <div class="row justify-content-center">
             <div class="col-3 text-center">
                 <p>
-                    <a class="btn btn-outline-primary" href="{% url 'elama:individual' %}">TRABAJO INDIVIDUAL</a>
+                    <a class="btn btn-outline-dark" href="{% url 'elama:individual' %}">
+                        TRABAJO INDIVIDUAL
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
+                            <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
+                        </svg>
+                    </a>
                 </p>
-                <div class="shadow-lg">
-                    <!--<img src="https://img.genial.ly/6372606ba56ad8001106c310/8273afd2-c207-48da-895f-b35e469858d8.jpeg"
-                         width="100%">-->
-                    <img src="{% static 'trabajo-individual.jpg' %}"
-                         alt="Imagen que muestra a un hombre escribiendo en un bloc de notas. A su derecha, tiene un portátil."
-                         width="100%">
+                <div class="d-flex justify-content-start">
+                    <button type="button" class="bg-transparent border-0 p-0 m-0 text-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalInformacionValores">
+                        <div class="shadow-lg hover-zoom">
+                            <!-- imagen del genially-->
+                            <!--<img src="https://img.genial.ly/6372606ba56ad8001106c310/8273afd2-c207-48da-895f-b35e469858d8.jpeg"
+                                 width="100%">-->
+                            <img src="{% static 'trabajo-individual.jpg' %}"
+                                 alt="Imagen que muestra a un hombre escribiendo en un bloc de notas. A su derecha, tiene un portátil."
+                                 width="100%">
+                        </div>
+                    </button>
                 </div>
+
             </div>
             <div class="col-3 text-center">
                 <p>
-                    <a class="btn btn-outline-primary" href={% url 'elama:grupal' %}>TRABAJO EN GRUPO</a>
+                    <a class="btn btn-outline-dark" href={% url 'elama:grupal' %}>
+                        TRABAJO EN GRUPO
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="icon icon-tabler icons-tabler-outline icon-tabler-users-group">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/>
+                            <path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1"/>
+                            <path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/>
+                            <path d="M17 10h2a2 2 0 0 1 2 2v1"/>
+                            <path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/>
+                            <path d="M3 13v-1a2 2 0 0 1 2 -2h2"/>
+                        </svg>
+                    </a>
                 </p>
-                <div class="shadow-lg">
-                    <!---<img src="https://img.genial.ly/6372606ba56ad8001106c310/1d7781bb-73d9-452b-a0f0-c5bcdf8007f1.jpeg"
-                         width="100%">-->
-                    <img src="{% static 'trabajo-grupo.jpg' %}"
-                         alt="Imagen que muestra la unión de cinco puños de cinco personas en señal de ser un equipo."
-                         width="100%">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="bg-transparent border-0 p-0 m-0 text-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalInformacionGrupal"
+                    >
+                        <div class="shadow-lg hover-zoom">
+                            <!-- imagen del genially-->
+                            <!---<img src="https://img.genial.ly/6372606ba56ad8001106c310/1d7781bb-73d9-452b-a0f0-c5bcdf8007f1.jpeg"
+                                 width="100%">-->
+                            <img class="zoom-hover transition " src="{% static 'trabajo-grupo.jpg' %}"
+                                 alt="Imagen que muestra la unión de cinco puños de cinco personas en señal de ser un equipo."
+                                 width="100%">
+                        </div>
+                    </button>
                 </div>
+
             </div>
         </div>
     </div>

@@ -1,8 +1,11 @@
 from typing import Optional
 
 from django.db.models import QuerySet
+
+from elama.forms.anotacion_form import AnotacionForm
+from elama.forms.volcado_form import VolcadoForm
 from elama.models import Autoevaluacion, Descriptor, Volcado
-from elama.forms import VolcadoForm
+from elama.models.descriptor_anotacion import DescriptorAnotacion
 
 
 class IndividualService:
@@ -70,3 +73,18 @@ class IndividualService:
                 volcado.autoevaluacion = autoevaluacion
                 volcado.descriptor = descriptor
                 volcado.save()
+
+    def crear_anotacion(self, data, autoevaluacion: Autoevaluacion, descriptor: Descriptor):
+        anotacion = DescriptorAnotacion.objects.filter(autoevaluacion_id=autoevaluacion.id, descriptor_id=descriptor.id).first()
+
+        if anotacion is None:
+            form = AnotacionForm(data=data)
+            if form.is_valid():
+                form.save()
+        else:
+            form = AnotacionForm(data=data)
+            if form.is_valid():
+                anotacion = form.save(commit=False)
+                anotacion.autoevaluacion = autoevaluacion
+                anotacion.descriptor = descriptor
+                anotacion.save()

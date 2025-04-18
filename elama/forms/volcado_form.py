@@ -1,5 +1,7 @@
 from django import forms
-from .models import Volcado
+
+from elama.models import Volcado
+
 
 class VolcadoForm(forms.ModelForm):
     class Meta:

@@ -42,26 +42,26 @@
                     {% if descriptor.principio.id == principio.id %}
                         {% if not descriptor.descriptor_padre %}
                             <h5 class="mt-2 ps-4">
+                                {% if descriptor|descriptor_in_volcado:volcados %}
+                                    <span class="fw-bold">&check;</span>
+                                {% endif %}
                                 {% if descriptor.contenido_html %}
                                     <a class="link link-success"
                                        href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
                                 {% else %}
                                     {{ descriptor }}
-                                {% endif %}
-                                {% if descriptor|descriptor_in_volcado:volcados %}
-                                    <span style="color: green">&check;</span>
                                 {% endif %}
                             </h5>
                         {% else %}
                             <h6 class="mt-2 ps-5">
+                                {% if descriptor|descriptor_in_volcado:volcados %}
+                                    <span class="fw-bold">&check;</span>
+                                {% endif %}
                                 {% if descriptor.contenido_html %}
                                     <a class="link link-success"
                                        href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
                                 {% else %}
                                     {{ descriptor }}
-                                {% endif %}
-                                {% if descriptor|descriptor_in_volcado:volcados %}
-                                    <span style="color: green">&check;</span>
                                 {% endif %}
                             </h6>
                         {% endif %}

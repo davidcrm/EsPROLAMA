@@ -44,14 +44,14 @@
                      style="padding-left: {{ descriptor|descriptor_identacion }}px;"
                      {% endif %}
                  >
+                    {% if descriptor|descriptor_in_volcado:volcados %}
+                        <span class="fw-bold">&check;</span>
+                    {% endif %}
                      {% if descriptor|descriptor_contenido_vacio %}
                          {{ descriptor.titulo }}
                      {% else %}
                          <a class="link link-success"
                             href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
-                     {% endif %}
-                     {% if descriptor|descriptor_in_volcado:volcados %}
-                         <span style="color: green">&check;</span>
                      {% endif %}
                  </h5>
              {% endfor %}

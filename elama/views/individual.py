@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from elama.forms.volcado_form import VolcadoForm
+
 from elama.services.individual_service import IndividualService
-from elama.models import Estrategia, Descriptor, Volcado
-from elama.forms import VolcadoForm
+from elama.models import Estrategia, Descriptor, Volcado, autoevaluacion
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, FileResponse
 from elama.models import Autoevaluacion
 from elama.services.pdf_service import PdfService
+
 
 @login_required
 def individual(request: HttpRequest):
@@ -19,7 +22,7 @@ def individual(request: HttpRequest):
                         .filter(usuario_id=request.user.id, grupo_id__isnull=True)
                         .order_by("fecha_hora"))
     return render(request, 'elama/individual.html', {
-      'autoevaluaciones': autoevaluaciones
+        'autoevaluaciones': autoevaluaciones
     })
 
 
@@ -37,6 +40,7 @@ def detalle_individual(request: HttpRequest, autoevaluacion_id: int):
         'estrategias': estrategias,
         'volcados': volcados
     })
+
 
 @login_required
 def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descriptor_id: int):
@@ -65,7 +69,6 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
         else:
             return redirect('elama:individual-detail', autoevaluacion_id=autoevaluacion.id)
 
-
     volcado = Volcado.objects.filter(
         autoevaluacion_id=autoevaluacion.id,
         descriptor_id=descriptor.id,
@@ -84,6 +87,7 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
         **paginacion,
     })
 
+
 # Vista para finalizar una autoevaluación, marcándola como finalizada.
 @login_required
 def finalizar_individual(request: HttpRequest, autoevaluacion_id: int):
@@ -95,6 +99,7 @@ def finalizar_individual(request: HttpRequest, autoevaluacion_id: int):
     autoevaluacion.save()  # Guarda los cambios.
 
     return redirect('elama:individual-detail', autoevaluacion_id=autoevaluacion_id)  # Redirige a la vista individual.
+
 
 @login_required
 def exportar(request: HttpRequest, autoevaluacion_id: int):

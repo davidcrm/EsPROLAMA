@@ -7,6 +7,8 @@ class Volcado(models.Model):
     autoevaluacion = models.ForeignKey(Autoevaluacion, on_delete=models.CASCADE)
     descriptor = models.ForeignKey(Descriptor, on_delete=models.CASCADE)
     valoracion = models.CharField(max_length=1)
+    logro = models.CharField(max_length=255, null=True, blank=True)
+    mejora =models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f"Autoevaluación: {self.autoevaluacion} - Descriptor: {self.descriptor} - Valoración: {self.valoracion}"

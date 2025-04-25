@@ -70,6 +70,7 @@
                 <div id="flush-collapse-grupos-supervisados" class="accordion-collapse collapse"
                      data-bs-parent="grupos-supervisados">
                     <div class="accordion-body">
+                    {% if grupos_supervisados %}
                         {% for grupo in grupos_supervisados %}
                             <div class="accordion accordion-flush" id="grupo-{{ grupo.id }}">
                                 <div class="accordion-item">
@@ -90,6 +91,9 @@
                                 </div>
                             </div>
                         {% endfor %}
+                    {% else %}
+                        No supervisas ninguna autoevaluación grupal
+                    {% endif %}
                     </div>
                 </div>
             </div>

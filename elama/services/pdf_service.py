@@ -1,3 +1,4 @@
+from datetime import datetime
 from io import BytesIO
 from xhtml2pdf import pisa
 from elama.models import Autoevaluacion, Estrategia, Volcado
@@ -5,7 +6,7 @@ from elama.models import Autoevaluacion, Estrategia, Volcado
 
 class PdfService:
     @staticmethod
-    def export_autoevaluacion(autoevaluacion: Autoevaluacion):
+    def export_autoevaluacion_individual(autoevaluacion: Autoevaluacion):
         estrategias = Estrategia.objects.all()
 
         html_string = """
@@ -21,6 +22,13 @@ class PdfService:
             </style>
         </head>
         <body>
+        """
+
+        html_string += f"""
+        <div>
+            <p>Usuario X</p>
+            <p>{datetime.now().strftime('%d/%m/%Y')}</p>
+        </div>
         """
 
         for estrategia in estrategias:
@@ -63,7 +71,6 @@ class PdfService:
                             <p>{volcado.mejora}</p>
                             """
 
-
                 html_string += "</ul>"
             html_string += "</ul>"
 
@@ -76,3 +83,7 @@ class PdfService:
         pisa_status = pisa.CreatePDF(html_string, dest=pdf_file)
         pdf_file.seek(0)
         return pdf_file if not pisa_status.err else None
+
+    @staticmethod
+    def export_autoevaluacion_grupal(autoevaluacion: Autoevaluacion):
+        pass

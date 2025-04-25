@@ -11,4 +11,4 @@ class Volcado(models.Model):
     mejora =models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return f"Autoevaluación: {self.autoevaluacion} - Descriptor: {self.descriptor} - Valoración: {self.valoracion}"
+        return f"Descriptor: {self.descriptor_id} - Valoración: {self.valoracion}"

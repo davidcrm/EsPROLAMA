@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpRequest
+from django.http import HttpRequest, FileResponse
 from django.shortcuts import render, redirect
 from elama.models import Grupo, Autoevaluacion, Descriptor, Estrategia, Volcado
+from elama.services.pdf_service import PdfService
 
 
 @login_required

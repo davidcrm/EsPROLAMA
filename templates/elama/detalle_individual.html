@@ -19,7 +19,7 @@
 
     <h3 class="d-flex align-items-center justify-content-center gap-2 mt-5">
         AUTOEVALUACIÓN INDIVIDUAL
-        {% include 'elama/components/imprimir_pdf.html' with autoevaluacion=autoevaluacion %}
+        {% include 'elama/components/imprimir_pdf.html' with autoevaluacion=autoevaluacion user=request.user%}
     </h3>
     {% if autoevaluacion.finalizada %}
         <h6 class="text-center text-danger">FINALIZADA</h6>

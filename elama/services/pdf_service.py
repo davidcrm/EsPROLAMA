@@ -1,12 +1,14 @@
 from datetime import datetime
 from io import BytesIO
+
+from django.contrib.auth.models import User
 from xhtml2pdf import pisa
-from elama.models import Autoevaluacion, Estrategia, Volcado
+from elama.models import Autoevaluacion, Estrategia, Volcado, Grupo
 
 
 class PdfService:
     @staticmethod
-    def export_autoevaluacion_individual(autoevaluacion: Autoevaluacion):
+    def export_autoevaluacion_individual(autoevaluacion: Autoevaluacion, user: User):
         estrategias = Estrategia.objects.all()
 
         html_string = """
@@ -26,7 +28,7 @@ class PdfService:
 
         html_string += f"""
         <div>
-            <p>Usuario X</p>
+            <p>Evaluador: <strong>{user.username}</strong></p>
             <p>{datetime.now().strftime('%d/%m/%Y')}</p>
         </div>
         """
@@ -58,7 +60,7 @@ class PdfService:
                     """
                     SI QUEREMOS MOSTRAR LAS ANOTACIONES EN EL PDF
                     """
-                    if volcado and (volcado.logro or volcado.mejora):
+                    if volcado:
                         if volcado.logro:
                             html_string += f"""
                             <h4>Logro</h4>
@@ -85,5 +87,5 @@ class PdfService:
         return pdf_file if not pisa_status.err else None
 
     @staticmethod
-    def export_autoevaluacion_grupal(autoevaluacion: Autoevaluacion):
+    def export_autoevaluacion_grupal(autoevaluacion: Autoevaluacion, grupo: Grupo):
         pass

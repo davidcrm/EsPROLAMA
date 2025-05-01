@@ -11,7 +11,7 @@ class Descriptor(models.Model):
     contenido_html = RichTextField(blank=True, null=True)
     descriptor_padre = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
     # Atributo para paginación y orden
-    step = models.IntegerField()
+    step = models.IntegerField(null=True)
 
 
     class Meta:

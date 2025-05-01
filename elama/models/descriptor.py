@@ -9,6 +9,9 @@ class Descriptor(models.Model):
     titulo = models.CharField(max_length=200)
     contenido_html = models.TextField(blank=True, null=True)
     descriptor_padre = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
+    # Atributo para paginación y orden
+    step = models.IntegerField()
+
 
     class Meta:
         verbose_name_plural = 'descriptores'

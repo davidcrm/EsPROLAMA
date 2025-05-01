@@ -33,12 +33,11 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     # Mis aplicaciones.
-    "elama.apps.ElamaConfig",
-    "users.apps.UsersConfig",
-
+    'elama.apps.ElamaConfig',
+    'users.apps.UsersConfig',
     # Aplicaciones de terceros.
     'django_bootstrap5',
-
+    'ckeditor',
     # Aplicaciones de Django predeterminadas.
     'django.contrib.admin',
     'django.contrib.auth',

@@ -81,6 +81,15 @@ def grupal_preview(request: HttpRequest, grupo_id: int):
         # Añadimos un nuevo volcado a la lista con el descriptor correspondiente y el valor promedio
         volcados.append(Volcado(descriptor=descriptor, valoracion=valoracion_promedio))
 
+    if request.method == 'POST':
+        print("Entrando en post")
+        pdf_file = PdfService.export_autoevaluacion_individual(autoevaluacion, request.user, volcados)
+        return FileResponse(
+            pdf_file,
+            as_attachment=True,
+            filename="autoevaluacion.pdf"
+        )
+
     return render(request, 'elama/detalle_grupal.html', {
         'autoevaluacion': autoevaluacion,
         'estrategias': estrategias,

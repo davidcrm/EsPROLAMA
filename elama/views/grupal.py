@@ -16,7 +16,8 @@ def grupal(request: HttpRequest):
         nuevo_grupo.save()
 
         # Recorremos los usuarios seleccionados
-        for usuario_id in request.POST['ids']:
+        for usuario_id in request.POST.getlist('ids'):
+            print(usuario_id)
             # Creamos una autoevaluación individual por cada usuario seleccionado
             autoevaluacion_individual = Autoevaluacion(usuario_id=usuario_id, grupo_id=nuevo_grupo.id)
             autoevaluacion_individual.save()

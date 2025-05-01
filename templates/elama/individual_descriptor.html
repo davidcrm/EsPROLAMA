@@ -24,12 +24,12 @@
                     d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z"/>
         </svg>
     </a>
-    <h3 class="text-center">
+    <h1 class="text-center">
         Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
         Migrantes Adultos (EsPROLAMA)
-    </h3>
+    </h1>
 
-    <h5 class="text-center mt-5">AUTOEVALUACIÓN INDIVIDUAL</h5>
+    <h3 class="text-center mt-5">AUTOEVALUACIÓN INDIVIDUAL</h3>
     <div class="d-flex align-items-center justify-content-between gap-3 my-3">
         <a
                 href="
@@ -115,7 +115,7 @@
                                 {% if autoevaluacion.finalizada %} disabled {% endif %}
                         />
                         <label
-                                class="btn btn-outline-dark"
+                                class="btn btn-outline-success"
                                 for="id_valoracion_{{ opcion.data.value }}"
                                 style="width: 100px;"
                         >
@@ -128,11 +128,11 @@
     	        div para mostrar el mensaje de feedback a la valoración
             {% endcomment %}
             <div class="d-flex justify-content-center align-items-center m-auto justify-text"
-                 style="max-width: 80vw; height: 50px">
+                 style="max-width: 75%; height: 50px">
                 <p id="valoracion-mensaje" class="mt-2 text-secondary" style="text-align: justify;"></p>
             </div>
 
-            <div class="accordion mt-3" style="width: 80vw" id="logroMejoraAccordion">
+            <div class="accordion mt-3" id="logroMejoraAccordion">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingLogroMejora">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -145,10 +145,12 @@
                         <div class="accordion-body">
                             <div class="d-flex justify-content-center">
                                 <div class="d-flex justify-content-between w-75 gap-5">
-                                    <div class="form-group flex-fill" >
-                                            {{ form.logro}}
+                                    <div class="form-group flex-fill">
+                                        <label for="mejoraTextarea">Logro:</label>
+                                        {{ form.logro }}
                                     </div>
-                                    <div class="form-group flex-fill" {% if autoevaluacion.finalizada %} disabled {% endif %}>
+                                    <div class="form-group flex-fill">
+                                        <label for="mejoraTextarea">Mejora:</label>
                                         {{ form.mejora }}
                                     </div>
                                 </div>

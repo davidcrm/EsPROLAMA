@@ -29,8 +29,18 @@
             color: var(--bs-body-color) !important;
         }
 
+        html[data-bs-theme="light"] li a.nav-link:not(.custom-link-active):hover {
+            background-color: var(--bs-body-color) !important;
+            color: white !important;
+        }
+
         html[data-bs-theme="dark"] li a.nav-link:not(.custom-link-active) {
             color: white !important;
+        }
+
+        html[data-bs-theme="dark"] li a.nav-link:not(.custom-link-active):hover {
+            background-color: white !important;
+            color: black !important;
         }
 
         aside {
@@ -52,20 +62,27 @@
         html[data-bs-theme="dark"] aside hr:first-of-type {
             border-top: 1px solid rgb(222, 226, 230);
         }
+
+        #app-title:hover {
+            opacity: 0.8;
+        }
     </style>
     {% block styles %}{% endblock %}
 </head>
 <body>
 
 <div class="d-flex flex-row align-items-start">
-    <aside class="d-flex flex-column flex-shrink-0 py-3" style="width: 280px; height: 100dvh;">
-        <a href="/" class="d-flex align-items-center px-3 mb-3 mb-md-0 me-md-auto text-decoration-none"">
-        <span class="fs-4">Administración</span>
+    <aside class="d-flex flex-column flex-shrink-0" style="width: 280px; height: 100dvh;">
+        <a id="app-title"
+           class="navbar-brand pt-3 px-3 fs-5" href="{% url 'elama:home' %}"
+           style="padding-bottom: 10px; transition: .3s all;"
+        >
+            EsPROLAMA
         </a>
-        <hr class="mt-1 mb-3"/>
+        <hr class="mt-0 mb-3"/>
         <ul class="nav nav-pills flex-column mb-auto px-3" id="admin-sidebar-nav">
             {% for link in links %}
-                <li class="nav-item">
+                <li class="nav-item mb-1">
                     <a
                             href="{{ link.href }}"
                             class="nav-link {% if link.href == current_path %}custom-link-active{% endif %}"
@@ -93,7 +110,7 @@
     </aside>
     <div class="w-100">
         <nav class="navbar w-100 px-3" style="border-bottom: 1px solid var(--bs-border-color);">
-            <a class="navbar-brand" href="{% url 'elama:home' %}">EsPROLAMA</a>
+            <div class="navbar-brand"></div>
             <div class="d-flex align-items-center">
                 <span class="navbar-text">Hola, <span style="font-weight: bold">{{ user.username }}</span>.</span>
                 <div class="dropdown">

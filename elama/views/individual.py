@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.urls import reverse
+
 from elama.forms.volcado_form import VolcadoForm
 
 from elama.services.individual_service import IndividualService
-from elama.models import Estrategia, Descriptor, Volcado, autoevaluacion
+from elama.models import Estrategia, Descriptor, Volcado
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, FileResponse
@@ -35,10 +37,17 @@ def detalle_individual(request: HttpRequest, autoevaluacion_id: int):
     estrategias = Estrategia.objects.prefetch_related('principio_set__descriptor_set').all()
     volcados = Volcado.objects.filter(autoevaluacion_id=autoevaluacion_id)
 
+    # Ruta para volver a home (depende si autoevaluación pertenece a grupo)
+    if autoevaluacion.grupo_id:
+        ruta_home = reverse('elama:grupal')
+    else:
+        ruta_home = reverse('elama:individual')
+
     return render(request, 'elama/detalle_individual.html', {
         'autoevaluacion': autoevaluacion,
         'estrategias': estrategias,
-        'volcados': volcados
+        'volcados': volcados,
+        'ruta_home': ruta_home
     })
 
 

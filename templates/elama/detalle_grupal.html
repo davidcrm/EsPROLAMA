@@ -1,0 +1,92 @@
+{% extends "elama/base.html" %}
+{% load django_bootstrap5 %}
+{% load descriptor_filters %}
+
+{% block content %}
+    {% comment %}
+        Botón HOME
+    {% endcomment %}
+    <a class="btn btn-outline-dark mb-3" href="{% url 'elama:individual' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-house-door"
+             viewBox="0 0 16 16">
+            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z"/>
+        </svg>
+    </a>
+    <h1 class="text-center">
+        Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
+        Migrantes Adultos (EsPROLAMA)
+    </h1>
+
+    <h3 class="d-flex align-items-center justify-content-center gap-2 mt-5">
+        AUTOEVALUACIÓN GRUPAL
+        <a
+                target="_blank"
+                class="btn btn-outline-danger"
+        >
+            <form action="{% url "elama:grupal-preview" autoevaluacion.grupo_id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" style="all: unset">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+                        <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4"/>
+                        <path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6"/>
+                        <path d="M17 18h2"/>
+                        <path d="M20 15h-3v6"/>
+                        <path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1z"/>
+                    </svg>
+                </button>
+            </form>
+        </a>
+    </h3>
+
+    {% for estrategia in estrategias %}
+        <h3 class="border-bottom mt-5">{{ estrategia }}</h3>
+
+        {% for principio in estrategia.principio_set.all %}
+            {% if principio.descriptor_set.all|length > 0 and principio.estrategia.id == estrategia.id %}
+                <h4 class="mt-4">{{ principio }}</h4>
+
+                {% for descriptor in principio.descriptor_set.all %}
+                    {% if descriptor.principio.id == principio.id %}
+                        {% if not descriptor.descriptor_padre %}
+                            <div class="d-flex align-items-center gap-1">
+                                <h5 class="mt-2 ps-4">
+                                    {{ descriptor }}
+                                </h5>
+                                {% if descriptor|descriptor_in_volcado:volcados %}
+                                    {% for volcado in volcados %}
+                                        {% if volcado.descriptor_id == descriptor.id %}
+                                            <span style="font-size: 20px;">
+                                                <strong>&#10132;</strong> {{ volcado.valoracion }}
+                                             </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="d-flex align-items-center gap-1">
+                                <h6 class="mt-2 ps-5">
+                                    {{ descriptor }}
+                                </h6>
+                                {% if descriptor|descriptor_in_volcado:volcados %}
+                                    {% for volcado in volcados %}
+                                        {% if volcado.descriptor_id == descriptor.id %}
+                                            <span style="font-size: 20px;">
+                                                <strong>&#10132;</strong> {{ volcado.valoracion }}
+                                             </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+
+{% endblock content %}

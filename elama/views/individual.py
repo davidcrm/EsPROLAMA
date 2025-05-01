@@ -107,9 +107,11 @@ def exportar(request: HttpRequest, autoevaluacion_id: int):
         pk=autoevaluacion_id,
         usuario_id=request.user.id
     )
-    pdf_file = PdfService.export_autoevaluacion(autoevaluacion)
+    pdf_file = PdfService.export_autoevaluacion_individual(autoevaluacion, request.user)
     return FileResponse(
         pdf_file,
         as_attachment=True,
         filename="autoevaluacion.pdf"
     )
+
+

@@ -95,7 +95,7 @@
         <form id="descriptor-form" action="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}"
               method="post">
             {% csrf_token %}
-            <div class="d-flex justify-content-center align-items-center gap-2 mb-5" id="id_valoracion">
+            <div class="d-flex justify-content-center align-items-center gap-3" id="id_valoracion">
                 {% for opcion in form.valoracion %}
                     <div>
                         <input
@@ -122,8 +122,8 @@
             {% comment %}
     	        div para mostrar el mensaje de feedback a la valoración
             {% endcomment %}
-            <div class="d-flex justify-content-center align-items-center m-auto justify-text"
-                 style="max-width: 75%; height: 50px">
+            <div id="radio-info-message" class="d-none justify-content-center align-items-center m-auto justify-text my-3"
+                 style="max-width: 424px; min-height: 50px">
                 <p id="valoracion-mensaje" class="mt-2 text-secondary" style="text-align: justify;"></p>
             </div>
 
@@ -139,7 +139,7 @@
                          data-bs-parent="#logroMejoraAccordion">
                         <div class="accordion-body">
                             <div class="d-flex justify-content-center">
-                                <div class="d-flex justify-content-between w-75 gap-5">
+                                <div class="d-flex flex-column justify-content-between w-75 gap-3">
                                     <div class="form-group flex-fill">
                                         <label for="mejoraTextarea">Logro:</label>
                                         {{ form.logro }}
@@ -157,12 +157,45 @@
         </form>
     </div>
 
+    {% comment %}
+            Modal de información sobre las puntuaciones
+    {% endcomment %}
+    <div class="modal fade" id="modalInformacionValores" tabindex="-1"
+         aria-labelledby="modalInformacionValoresTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalInformacionValoresTitle">Significado de la escala</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ol class="ps-3">
+                        <li class="mb-2">Principio no concretado en acciones del programa.</li>
+                        <li class="mb-2">Principio concretado en acciones individuales o puntuales del programa.
+                        </li>
+                        <li class="mb-2">Principio concretado en acciones que realiza todo el equipo, aunque no sean
+                            periódicas o sistemáticas.
+                        </li>
+                        <li class="mb-2">Principio concretado en acciones que implican a todo el equipo y a la
+                            comunidad
+                            educativa en su conjunto, que se programan anualmente, y que son coherentes y están
+                            fundamentadas.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
 
+{% block scripts %}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            const anteriorBtn = document.getElementById("anterior");
             const radios = document.querySelectorAll('input[name="valoracion"]');
+            const radioInfoMessage = document.getElementById("radio-info-message");
             const mensajeSeleccionado = document.getElementById("valoracion-mensaje");
-            const anteriorBtn = document.getElementById("anterior")
 
             const mensajes = {
                 1: "No os preocupéis. Lo importante es tomar conciencia y ponerse manos a la obra. Sois un equipo. ",
@@ -171,13 +204,15 @@
                 4: "Enhorabuena. Vuestro programa responde a vuestras expectativas en relación a este principio. No obstante, seguro que queréis profundizar en vuestras prácticas, experimentar nuevas ideas y ensayar iniciativas que estén dando buenos resultados en otras entidades.",
             };
 
-            const actualizarRadio = ({target}) => {
+            const actualizarRadio = ({ target }) => {
                 const valor = target.value;
                 if (valorSeleccionado === valor) {
                     target.checked = false;
                     valorSeleccionado = null;
+                    radioInfoMessage.classList.replace("d-flex", "d-none");
                     mensajeSeleccionado.textContent = "";
                 } else {
+                    radioInfoMessage.classList.replace("d-none", "d-flex");
                     valorSeleccionado = valor;
                     mensajeSeleccionado.textContent = mensajes[valor] || "";
                 }
@@ -212,35 +247,4 @@
             actualizarMensaje();
         });
     </script>
-
-    {% comment %}
-            Modal de información sobre las puntuaciones
-    {% endcomment %}
-    <div class="modal fade" id="modalInformacionValores" tabindex="-1"
-         aria-labelledby="modalInformacionValoresTitle"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalInformacionValoresTitle">Significado de la escala</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <ol class="ps-3">
-                        <li class="mb-2">Principio no concretado en acciones del programa.</li>
-                        <li class="mb-2">Principio concretado en acciones individuales o puntuales del programa.
-                        </li>
-                        <li class="mb-2">Principio concretado en acciones que realiza todo el equipo, aunque no sean
-                            periódicas o sistemáticas.
-                        </li>
-                        <li class="mb-2">Principio concretado en acciones que implican a todo el equipo y a la
-                            comunidad
-                            educativa en su conjunto, que se programan anualmente, y que son coherentes y están
-                            fundamentadas.
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock content %}
+{% endblock %}

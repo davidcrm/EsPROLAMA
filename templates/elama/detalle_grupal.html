@@ -59,7 +59,7 @@
                                     {{ descriptor }}
                                 </h5>
                                 {% if descriptor|descriptor_in_volcado:volcados %}
-                                    {% for volcado in volcados|dictsort:'step' %}
+                                    {% for volcado in volcados %}
                                         {% if volcado.descriptor_id == descriptor.id %}
                                             <span style="font-size: 20px;">
                                                 <strong>&#10132;</strong> {{ volcado.valoracion }}

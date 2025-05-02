@@ -32,7 +32,7 @@ class PdfService:
         </div>
         """
 
-        for estrategia in estrategias:
+        for estrategia in estrategias.order_by('step'):
             html_string += f"""
                 <h2>{estrategia.titulo}</h2>
                 <ul>

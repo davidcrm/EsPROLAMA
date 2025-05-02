@@ -54,7 +54,10 @@
                          {{ descriptor.titulo }}
                      {% else %}
                          <a class="link link-success"
-                            href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
+                            href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}"
+                         >
+                             {{ descriptor }}
+                         </a>
                      {% endif %}
                  </h5>
              {% endfor %}

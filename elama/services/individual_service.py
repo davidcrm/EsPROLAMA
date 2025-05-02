@@ -1,7 +1,6 @@
 from typing import Optional
 
-from django.db.models import QuerySet
-
+from django.utils.html import strip_tags
 from elama.forms.volcado_form import VolcadoForm
 from elama.models import Autoevaluacion, Descriptor, Volcado
 
@@ -14,25 +13,28 @@ class IndividualService:
         ultimo_descriptor = descriptores.last()
 
         if self.contenido_html_vacio(primer_descriptor):
-            primer_descriptor = self.buscar_descriptores_hijos(primer_descriptor.descriptor_set.all()).first()
+            primer_descriptor = primer_descriptor.descriptor_set.order_by("step").first()
 
         if self.contenido_html_vacio(ultimo_descriptor):
-            ultimo_descriptor = self.buscar_descriptores_hijos(ultimo_descriptor.descriptor_set.all()).last()
+            ultimo_descriptor = ultimo_descriptor.descriptor_set.order_by("step").last()
 
-        siguiente_descriptor = descriptores.filter(id__gt=descriptor.id).first()
+        siguiente_descriptor = descriptores.filter(step__gt=descriptor.step).first()
 
         if siguiente_descriptor is None:
             siguiente_descriptor = descriptor
         elif self.contenido_html_vacio(siguiente_descriptor):
-            siguiente_descriptor = self.buscar_descriptores_hijos(siguiente_descriptor.descriptor_set.all()).first()
+            siguiente_descriptor = descriptores.filter(
+                step__gt=siguiente_descriptor.step,
+                contenido_html__isnull=False
+            ).first()
 
-        anterior_descriptor = descriptores.filter(id__lt=descriptor.id).last()
+        anterior_descriptor = descriptores.filter(step__lt=descriptor.step).last()
 
         if anterior_descriptor is None:
             anterior_descriptor = descriptor
         elif self.contenido_html_vacio(anterior_descriptor):
             anterior_descriptor = descriptores.filter(
-                id__lt=anterior_descriptor.id,
+                step__lt=anterior_descriptor.step,
                 contenido_html__isnull=False
             ).last()
 
@@ -43,18 +45,10 @@ class IndividualService:
             'anterior_descriptor': anterior_descriptor,
         }
 
-    def contenido_html_vacio(self, descriptor: Optional[Descriptor]):
-        if descriptor is None:
+    def contenido_html_vacio(self, descriptor: Optional[Descriptor]) -> bool:
+        if descriptor is None or not descriptor.contenido_html:
             return True
-        return descriptor.contenido_html is None or len(descriptor.contenido_html.strip()) == 0
-
-    def buscar_descriptores_hijos(self, descriptores: Optional[QuerySet]):
-        if descriptores is None or descriptores.count() == 0:
-            return descriptores
-        for descriptor in descriptores.all():
-            if descriptor.descriptor_set.count() > 0:
-                return self.buscar_descriptores_hijos(descriptor.descriptor_set.all())
-        return descriptores
+        return strip_tags(descriptor.contenido_html).strip() == ""
 
     # data = request.POST
     def crear_volcado(self, data, autoevaluacion: Autoevaluacion, descriptor: Descriptor):
@@ -74,4 +68,3 @@ class IndividualService:
                 volcado.autoevaluacion = autoevaluacion
                 volcado.descriptor = descriptor
                 volcado.save()
-

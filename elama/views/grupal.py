@@ -8,7 +8,6 @@ from elama.services.pdf_service import PdfService
 
 @login_required
 def grupal(request: HttpRequest):
-
     if request.method == 'POST':
         nuevo_grupo = Grupo(nombre=request.POST['nombre'])
         # Se hace responsable al usuario autenticado (La petición no devuelve el id de este)
@@ -26,19 +25,15 @@ def grupal(request: HttpRequest):
         autoevaluacion_responsable = Autoevaluacion(usuario_id=request.user.id, grupo_id=nuevo_grupo.id)
         autoevaluacion_responsable.save()
 
-    usuario_autenticado = User.objects.get(pk=request.user.id)
-    grupos_supervisados = Grupo.objects.filter(responsable_id=usuario_autenticado.id)
+    grupos_supervisados = Grupo.objects.filter(responsable_id=request.user.id)
     grupales_no_supervisadas = (Autoevaluacion.objects
         .filter(
-            usuario_id=usuario_autenticado.id,
+            usuario_id=request.user.id,
             grupo_id__isnull=False,
-        ).exclude(
-            grupo__responsable_id=usuario_autenticado.id,
-        )
-    )
+        ).exclude(grupo__responsable_id=request.user.id))
     usuarios = (User.objects
                 .filter(is_superuser=False, is_staff=False)
-                .exclude(id=usuario_autenticado.id))
+                .exclude(id=request.user.id))
 
     return render(request,
         'elama/grupal.html',
@@ -82,7 +77,6 @@ def grupal_preview(request: HttpRequest, grupo_id: int):
         volcados.append(Volcado(descriptor=descriptor, valoracion=valoracion_promedio))
 
     if request.method == 'POST':
-        print("Entrando en post")
         pdf_file = PdfService.export_autoevaluacion_individual(autoevaluacion, request.user, volcados)
         return FileResponse(
             pdf_file,

@@ -20,8 +20,7 @@
     <a class="btn btn-outline-dark mb-3" href="{% url 'elama:individual-detail' autoevaluacion.id %}">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-house-door"
              viewBox="0 0 16 16">
-            <path
-                    d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z"/>
+            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z"/>
         </svg>
     </a>
     <h1 class="text-center">
@@ -31,37 +30,33 @@
 
     <h3 class="text-center mt-5">AUTOEVALUACIÓN INDIVIDUAL</h3>
     <div class="d-flex align-items-center justify-content-between gap-3 my-3">
-        <a
-                href="
-                    {% if  primer_descriptor.id == descriptor.id %}
-                        {% url 'elama:individual-detail' autoevaluacion.id %}
-                    {% else %}
-                        {% url 'elama:individual-descriptor' autoevaluacion.id anterior_descriptor.id %}
-                    {% endif %}
-                "
-                class="btn btn-outline-dark"
-        >
-            {% comment %}
-            Botón ANTERIOR/SALIR
+        {% comment %}
+            Botón ANTERIOR
         {% endcomment %}
+        <button
+                id= "anterior"
+                class="btn btn-outline-dark
+                {% if  primer_descriptor.id == descriptor.id %}
+                    disabled
+                {% endif %}
+                "
+        >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-big-left">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path
-                        d="M20 15h-8v3.586a1 1 0 0 1 -1.707 .707l-6.586 -6.586a1 1 0 0 1 0 -1.414l6.586 -6.586a1 1 0 0 1 1.707 .707v3.586h8a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1z"/>
+                <path d="M20 15h-8v3.586a1 1 0 0 1 -1.707 .707l-6.586 -6.586a1 1 0 0 1 0 -1.414l6.586 -6.586a1 1 0 0 1 1.707 .707v3.586h8a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1z"/>
             </svg>
-        </a>
+        </button>
         {% comment %}
-            Botón SIGUIENTE/GUARDAR
+            Botón SIGUIENTE #TODO: El volcado se debe guardar con cada cambio y no con el botón de paginar
         {% endcomment %}
         <button type="submit" id="siguiente" form="descriptor-form" class="btn btn-outline-dark">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-big-right">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path
-                        d="M4 9h8v-3.586a1 1 0 0 1 1.707 -.707l6.586 6.586a1 1 0 0 1 0 1.414l-6.586 6.586a1 1 0 0 1 -1.707 -.707v-3.586h-8a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1z"/>
+                <path d="M4 9h8v-3.586a1 1 0 0 1 1.707 -.707l6.586 6.586a1 1 0 0 1 0 1.414l-6.586 6.586a1 1 0 0 1 -1.707 -.707v-3.586h-8a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1z"/>
             </svg>
         </button>
     </div>
@@ -167,6 +162,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             const radios = document.querySelectorAll('input[name="valoracion"]');
             const mensajeSeleccionado = document.getElementById("valoracion-mensaje");
+            const anteriorBtn = document.getElementById("anterior")
 
             const mensajes = {
                 1: "No os preocupéis. Lo importante es tomar conciencia y ponerse manos a la obra. Sois un equipo. ",
@@ -194,6 +190,13 @@
                     mensajeSeleccionado.textContent = mensajes[valor] || "";
                 }
             }
+
+            anteriorBtn.addEventListener("click", () => {
+                const form = document.getElementById("descriptor-form");
+                form.innerHTML += `<input type="hidden" name="anterior" value="True"/>`;
+                console.log(form.innerHTML)
+                form.submit();
+            });
 
             let valorSeleccionado = null;
 

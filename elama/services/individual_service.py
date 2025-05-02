@@ -8,7 +8,7 @@ from elama.models import Autoevaluacion, Descriptor, Volcado
 
 class IndividualService:
     def paginacion(self, descriptor: Descriptor):
-        descriptores = Descriptor.objects.all().order_by("id")
+        descriptores = Descriptor.objects.all().order_by("step")
 
         primer_descriptor = descriptores.first()
         ultimo_descriptor = descriptores.last()

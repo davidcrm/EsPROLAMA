@@ -6,15 +6,13 @@
     {% comment %}
         Botón HOME
     {% endcomment %}
-
-
     <a class="btn btn-outline-dark mb-3" href="{% url 'elama:grupal' %}">
-
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-house-door"
              viewBox="0 0 16 16">
             <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z"/>
         </svg>
     </a>
+
     <h1 class="text-center">
         Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
         Migrantes Adultos (EsPROLAMA)
@@ -46,14 +44,14 @@
         </a>
     </h3>
 
-    {% for estrategia in estrategias %}
+    {% for estrategia in estrategias|dictsort:'step' %}
         <h3 class="border-bottom mt-5">{{ estrategia }}</h3>
 
-        {% for principio in estrategia.principio_set.all %}
+        {% for principio in estrategia.principio_set.all|dictsort:'step' %}
             {% if principio.descriptor_set.all|length > 0 and principio.estrategia.id == estrategia.id %}
                 <h4 class="mt-4">{{ principio }}</h4>
 
-                {% for descriptor in principio.descriptor_set.all %}
+                {% for descriptor in principio.descriptor_set.all|dictsort:'step' %}
                     {% if descriptor.principio.id == principio.id %}
                         {% if not descriptor.descriptor_padre %}
                             <div class="d-flex align-items-center gap-1">
@@ -61,7 +59,7 @@
                                     {{ descriptor }}
                                 </h5>
                                 {% if descriptor|descriptor_in_volcado:volcados %}
-                                    {% for volcado in volcados %}
+                                    {% for volcado in volcados|dictsort:'step' %}
                                         {% if volcado.descriptor_id == descriptor.id %}
                                             <span style="font-size: 20px;">
                                                 <strong>&#10132;</strong> {{ volcado.valoracion }}

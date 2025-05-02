@@ -35,17 +35,17 @@ class PdfService:
         </div>
         """
 
-        for estrategia in estrategias:
+        for estrategia in estrategias.order_by('step'):
             html_string += f"""
                 <h2>{estrategia.titulo}</h2>
                 <ul>
             """
-            for principio in estrategia.principio_set.all():
+            for principio in estrategia.principio_set.all().order_by('step'):
                 html_string += f"""
                     <li><h3>{principio.titulo}</h3></li>
                     <ul>
                 """
-                for descriptor in principio.descriptor_set.all():
+                for descriptor in principio.descriptor_set.all().order_by('step'):
                     titulo = descriptor.titulo.rstrip()
                     if titulo.endswith('.'):
                         puntos = titulo[:-1].count('.')

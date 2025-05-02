@@ -1,26 +1,23 @@
 from datetime import datetime
 from io import BytesIO
 
-from django.contrib.auth.models import User
+from django.contrib.auth.base_user import AbstractBaseUser
 from xhtml2pdf import pisa
 from typing import Optional, List
-
-from elama.models import Autoevaluacion, Estrategia, Volcado, Grupo
+from elama.models import Autoevaluacion, Estrategia, Volcado
 
 
 class PdfService:
     @staticmethod
-    def export_autoevaluacion_individual(autoevaluacion: Autoevaluacion, user: User, volcados: Optional[List[Volcado]] = None):
-        estrategias = Estrategia.objects.all()
+    def export_autoevaluacion_individual(autoevaluacion: Autoevaluacion, user: AbstractBaseUser, volcados: Optional[List[Volcado]] = None):
+        estrategias = Estrategia.objects.all().order_by("step")
 
         html_string = """
         <html>
         <head>
             <style> 
-                ul, 
-                ul ul, 
-                ul ul ul, 
-                ul ul ul ul {
+                ul,
+                ul ul {
                     list-style-type: none; 
                 } 
             </style>
@@ -35,29 +32,29 @@ class PdfService:
         </div>
         """
 
-        for estrategia in estrategias:
+        for estrategia in estrategias.order_by('step'):
             html_string += f"""
                 <h2>{estrategia.titulo}</h2>
                 <ul>
             """
-            for principio in estrategia.principio_set.all():
+            for principio in estrategia.principio_set.all().order_by("step"):
                 html_string += f"""
                     <li><h3>{principio.titulo}</h3></li>
                     <ul>
                 """
-                for descriptor in principio.descriptor_set.all():
+                for descriptor in principio.descriptor_set.all().order_by("step"):
                     titulo = descriptor.titulo.rstrip()
                     if titulo.endswith('.'):
                         puntos = titulo[:-1].count('.')
                     else:
                         puntos = titulo.count('.')
-                    padding_left = 8 if puntos > 2 else 0
 
+                    padding_left = 8 if puntos > 2 else 0
                     volcado = None
 
                     if volcados is None:
                         volcado = descriptor.volcado_set.filter(autoevaluacion_id=autoevaluacion.id).first()
-                    elif type(volcados) == list :
+                    elif type(volcados) == list:
                         volcado = list(filter(
                             lambda v: v.autoevaluacion_id == autoevaluacion.id and v.descriptor_id == descriptor.id,
                             volcados
@@ -68,27 +65,23 @@ class PdfService:
                     html_string += f"""
                         <li style="padding-left: {padding_left * puntos}px;">
                             {descriptor.titulo}  {f" &#10132; <strong>{volcado.valoracion}</strong>" if volcado else ''}
-                                """
+                        </li>
+                    """
 
-
-#                   if volcado:
-#                        """
-#                        SI QUEREMOS MOSTRAR LAS ANOTACIONES EN EL PDF
-#                        """
-#                        if volcado.logro:
-#                            html_string += f"""
-#                            <h4>Logro</h4>
-#                            <p>{volcado.logro}</p>
-#                            """
-#                        if volcado.mejora:
-#                            html_string += f"""
-#                            <h4>Mejora</h4>
-#                            <p>{volcado.mejora}</p>
-#                            """
+                   #if volcado:
+                        #if volcado.logro:
+                            # html_string += f"""
+                            # <h4>Logro</h4>
+                            # <p>{volcado.logro}</p>
+                            # """
+                        #if volcado.mejora:
+                            #html_string += f"""
+                            #<h4>Mejora</h4>
+                            #<p>{volcado.mejora}</p>
+                            #"""
 
                 html_string += "</ul>"
             html_string += "</ul>"
-
         html_string += """    
         </body>
         </html>
@@ -98,7 +91,3 @@ class PdfService:
         pisa_status = pisa.CreatePDF(html_string, dest=pdf_file)
         pdf_file.seek(0)
         return pdf_file if not pisa_status.err else None
-
-    @staticmethod
-    def export_autoevaluacion_grupal(autoevaluacion: Autoevaluacion, grupo: Grupo):
-        pass

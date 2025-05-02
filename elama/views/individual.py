@@ -70,6 +70,12 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
         )
 
         if paginacion['ultimo_descriptor'].id != descriptor.id:
+            if 'anterior' in request.POST:
+                return redirect(
+                    'elama:individual-descriptor',
+                    autoevaluacion_id=autoevaluacion.id,
+                    descriptor_id=paginacion['anterior_descriptor'].id
+                )
             return redirect(
                 'elama:individual-descriptor',
                 autoevaluacion_id=autoevaluacion.id,
@@ -112,15 +118,13 @@ def finalizar_individual(request: HttpRequest, autoevaluacion_id: int):
 
 @login_required
 def exportar(request: HttpRequest, autoevaluacion_id: int):
-    autoevaluacion = Autoevaluacion.objects.get(
-        pk=autoevaluacion_id,
-        usuario_id=request.user.id
-    )
+    autoevaluacion = Autoevaluacion.objects.filter(
+        Q(pk=autoevaluacion_id),
+        Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
+    ).get()
     pdf_file = PdfService.export_autoevaluacion_individual(autoevaluacion, request.user)
     return FileResponse(
         pdf_file,
         as_attachment=True,
         filename="autoevaluacion.pdf"
     )
-
-

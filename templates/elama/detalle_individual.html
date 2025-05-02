@@ -24,6 +24,9 @@
     {% if autoevaluacion.finalizada %}
         <h6 class="text-center text-danger">FINALIZADA</h6>
     {% else %}
+        {% comment %}
+                Botón finalizar autoevaluación
+        {% endcomment %}
         <p class="text-center">
             <a class="btn btn-success mt-2"
                     {% if autoevaluacion.finalizada %} disabled {% endif %}
@@ -31,11 +34,11 @@
         </p>
     {% endif %}
 
-     {% for estrategia in estrategias|dictsort:'id' %}
+     {% for estrategia in estrategias|dictsort:'step' %}
          <h3 class="border-bottom mt-5">{{ estrategia.titulo }}</h3>
-         {% for principio in estrategia.principio_set.all|dictsort:'titulo' %}
+         {% for principio in estrategia.principio_set.all|dictsort:'step' %}
              <h4 class="mt-4">{{ principio.titulo }}</h4>
-             {% for descriptor in principio.descriptor_set.all|dictsort:'titulo' %}
+             {% for descriptor in principio.descriptor_set.all|dictsort:'step' %}
                  <h5
                      class="mt-2"
                      {% if not descriptor.descriptor_padre %}
@@ -51,7 +54,10 @@
                          {{ descriptor.titulo }}
                      {% else %}
                          <a class="link link-success"
-                            href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}">{{ descriptor }}</a>
+                            href="{% url 'elama:individual-descriptor' autoevaluacion.id descriptor.id %}"
+                         >
+                             {{ descriptor }}
+                         </a>
                      {% endif %}
                  </h5>
              {% endfor %}

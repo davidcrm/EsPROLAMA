@@ -2,6 +2,8 @@ from django.db.models.query import QuerySet
 from elama.models import Descriptor, Volcado
 from django import template
 
+from elama.services.individual_service import IndividualService
+from elama.views.individual import individual
 
 register = template.Library()
 
@@ -14,7 +16,7 @@ def descriptor_in_volcado(descriptor: Descriptor, volcados: QuerySet[Volcado] | 
 
 @register.filter(name='descriptor_contenido_vacio')
 def descriptor_contenido_vacio(descriptor: Descriptor):
-    return descriptor.contenido_html is None or len(descriptor.contenido_html.strip()) == 0
+    return IndividualService().contenido_html_vacio(descriptor)
 
 @register.filter(name='descriptor_identacion')
 def descriptor_identacion(descriptor: Descriptor):

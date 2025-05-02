@@ -68,7 +68,6 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
             autoevaluacion=autoevaluacion,
             descriptor=descriptor
         )
-        print(request.POST)
 
         if paginacion['ultimo_descriptor'].id != descriptor.id:
             if 'anterior' in request.POST:

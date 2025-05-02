@@ -34,7 +34,7 @@
             Botón ANTERIOR
         {% endcomment %}
         <button
-                id= "anterior"
+                id="anterior"
                 class="btn btn-outline-dark
                 {% if  primer_descriptor.id == descriptor.id %}
                     disabled
@@ -193,8 +193,11 @@
 
             anteriorBtn.addEventListener("click", () => {
                 const form = document.getElementById("descriptor-form");
-                form.innerHTML += `<input type="hidden" name="anterior" value="True"/>`;
-                console.log(form.innerHTML)
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "anterior";
+                input.value = "True";
+                form.appendChild(input);
                 form.submit();
             });
 

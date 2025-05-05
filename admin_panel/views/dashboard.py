@@ -7,7 +7,7 @@ def dashboard(request: HttpRequest):
     links = [
         {
             'label': 'Dashboard',
-            'href': '/admin/'
+            'href': '/admin_panel/'
         },
         {
             'label': 'Estrategias',

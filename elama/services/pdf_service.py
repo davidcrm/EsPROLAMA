@@ -26,8 +26,19 @@ class PdfService:
         """
 
         html_string += f"""
-        <div>
+        <div style="align:center;">
+        """
+        if autoevaluacion.grupo:
+            html_string += f"""<h2>AUTOEVALUACION GRUPAL</h2>
+             <p>Grupo: <strong>{autoevaluacion.grupo.nombre}</strong></p>
+            """
+        else:
+            html_string += f"""
+            <h2>AUTOEVALUACION INDIVIDUAL</h2>
             <p>Evaluador: <strong>{user.username}</strong></p>
+            """
+
+        html_string += f"""
             <p>{datetime.now().strftime('%d/%m/%Y')}</p>
         </div>
         """

@@ -3,21 +3,85 @@
 
 {% block content %}
 
-    <h1>Principios</h1>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h1>Principios</h1>
+        {% comment %} TODO: Crear vista y template para añadir un principio nuevo{% endcomment %}
+        <a href="{% url 'admin_panel:dashboard' %}" class="btn btn-dark">Nuevo Principio</a>
+    </div>
 
-    <table class="table table-striped table-hover shadow-sm rounded align-middle align-center">
-        <tr>
-            <th>Principio</th>
-            <th>Estrategia</th>
-        </tr>
-    
-        {% for principio in principios %}
+    <div class="table-container" style="height: 81vh; overflow-y: auto;">
+        <table id="tabla-principios"
+               class="table table-striped table-hover shadow-sm rounded align-middle align-center">
+            <thead>
             <tr>
-                <td> {{ principio.titulo }}</td>
-                <td>{{ principio.estrategia_id }}</td>
+                <th></th>
+                <th>Principio</th>
+                <th>Estrategia</th>
             </tr>
-        {% endfor %}
+            </thead>
 
-    </table>
+            <tbody>
+            {% for principio in principios %}
+                <tr data-id="{{ principio.id }}">
+                    <td class="handle" style="cursor: grab;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+                        </svg>
+                    </td>
+                    <td> {{ principio.titulo }}</td>
+                    <td>{{ principio.estrategia_id }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
 
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script>
+        // Metemos el tbody de la tabla en una variable
+        const tabla = document.querySelector('#tabla-principios tbody');
+
+        //Creamos un objeto Sortable para poder arrastrar las filas
+        new Sortable(tabla, {
+            animation: 200, // Velocidad de la animacion
+            handle: '.handle', // El elemento arrastrable es el que tiene la clase handle
+            // Función para cambiar el orden
+            onEnd: async () => {
+                // Creamos un array vacío cada vez que se mueva una fila
+                const orden = [];
+                tabla.querySelectorAll('tr').forEach(tr => {
+                    orden.push(tr.dataset.id); // Añade el id de cada fila al array
+                });
+                try {
+                    // Enviar el nuevo orden al backend
+                    const response = await fetch("{% url 'admin_panel:actualizar_orden' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}' // Token de django para evitar problemas
+                        },
+                        body: JSON.stringify({'principios': orden}) // mandamos los steps en orden
+                    })
+
+                    // Lanzamos error si la respuesta da error
+                    if (!response.ok) {
+                        throw new Error('Error al actualizar orden');
+                    }
+                    // pasamos la respuesta a json
+                    const data = await response.json();
+                    console.log('Orden actualizado correctamente:', data); // pruebas
+                    // Recargamos la página para ver el nuevo orden
+                    location.reload()
+                } catch (error) {
+                    console.error(error);
+                    alert('Hubo un error al actualizar el orden');
+                }
+            }
+        });
+    </script>
 {% endblock %}

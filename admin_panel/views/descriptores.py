@@ -2,11 +2,11 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpRequest
 from django.shortcuts import render
 
-from elama.models import Principio
+from elama.models import Descriptor
 
 
 @staff_member_required
-def principios_list(request: HttpRequest):
+def descriptor_list(request: HttpRequest):
     links = [
         {
             'label': 'Dashboard',
@@ -25,9 +25,9 @@ def principios_list(request: HttpRequest):
             'href': '/admin_panel/descriptores/'
         },
     ]
-    principios = Principio.objects.all().order_by('step')
+    descriptores = Descriptor.objects.all().order_by('step')
 
-    return render(request,'admin_panel/principios_list.html',{
-        'principios':principios,
+    return render(request,'admin_panel/descriptores_list.html',{
+        'descriptores':descriptores,
         'links': links,
     })

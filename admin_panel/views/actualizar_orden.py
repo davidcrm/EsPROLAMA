@@ -27,19 +27,18 @@ def actualizar_orden(request: HttpRequest):
     for clave, modelo in modelos.items():
         # Comprobamos si esa clave está en los datos recibidos
         if clave in data:
-            for clave, modelo in modelos.items():
-                if clave in data:
-                    # Primero, pone los `step` a `null` para todos los objetos
-                    for objeto_id in data[clave]:
-                        objeto = modelo.objects.get(id=objeto_id)
-                        objeto.step = None  # Poner step a null
-                        objeto.save()
 
-                    # Luego, reasigna los `step` en el nuevo orden
-                    for i, objeto_id in enumerate(data[clave]):
-                        objeto = modelo.objects.get(id=objeto_id)
-                        objeto.step = i  # Establece el nuevo valor de step
-                        objeto.save()  # Guarda el cambio
+            # Primero, pone los `step` a `null` para todos los objetos
+            for objeto_id in data[clave]:
+                objeto = modelo.objects.get(id=objeto_id)
+                objeto.step = None  # Poner step a null
+                objeto.save()
+
+            # Luego, reasigna los `step` en el nuevo orden
+            for i, objeto_id in enumerate(data[clave]):
+                objeto = modelo.objects.get(id=objeto_id)
+                objeto.step = i  # Establece el nuevo valor de step
+                objeto.save()  # Guarda el cambio
 
             # Indicamos que se procesó la clave
             procesado = True

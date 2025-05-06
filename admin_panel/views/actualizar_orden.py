@@ -10,7 +10,7 @@ from elama.models import Estrategia, Principio, Descriptor
 @staff_member_required
 @require_POST  # asegura que solo aceptemos peticiones POST.
 def actualizar_orden(request: HttpRequest):
-    # Parseamos el cuerpo de la petición desde JSON a diccionario de Python
+    # Parseamos el cuerpo de la petición de JSON a diccionario de Python
     data = json.loads(request.body)
 
     # Diccionario que mapea las claves recibidas en el JSON con los modelos de Django
@@ -27,18 +27,19 @@ def actualizar_orden(request: HttpRequest):
     for clave, modelo in modelos.items():
         # Comprobamos si esa clave está en los datos recibidos
         if clave in data:
-            # Si está, recorremos la lista de IDs recibidos en esa clave
-            for i, objeto_id in enumerate(data[clave]):
-                try:
-                    # Buscamos el objeto por su ID
-                    objeto = modelo.objects.get(id=objeto_id)
-                    # Actualizamos su campo 'step' con el valor de la iteración actual (posición en la tabla)
-                    objeto.step = i
-                    # Guardamos los cambios
-                    objeto.save()
-                except modelo.DoesNotExist:
-                    # En caso de que no se encuentre el objeto, devolvemos error
-                    return JsonResponse({'status': 'error'}, status=404)
+            for clave, modelo in modelos.items():
+                if clave in data:
+                    # Primero, pone los `step` a `null` para todos los objetos
+                    for objeto_id in data[clave]:
+                        objeto = modelo.objects.get(id=objeto_id)
+                        objeto.step = None  # Poner step a null
+                        objeto.save()
+
+                    # Luego, reasigna los `step` en el nuevo orden
+                    for i, objeto_id in enumerate(data[clave]):
+                        objeto = modelo.objects.get(id=objeto_id)
+                        objeto.step = i  # Establece el nuevo valor de step
+                        objeto.save()  # Guarda el cambio
 
             # Indicamos que se procesó la clave
             procesado = True

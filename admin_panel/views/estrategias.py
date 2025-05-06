@@ -26,7 +26,7 @@ def estrategia_list(request: HttpRequest):
             'href': '/admin_panel/descriptores/'
         },
     ]
-    estrategias = Estrategia.objects.all()
+    estrategias = Estrategia.objects.all().order_by('step')
 
     return render(request,'admin_panel/estrategia_list.html',{
         'estrategias':estrategias,

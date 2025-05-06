@@ -1,5 +1,5 @@
 from django.urls import path
-from .views.auth import login, sign_out
+from .views.auth import redirect_to_login, sign_out
 from .views.home import home
 from .views.grupal import grupal, grupal_preview
 from .views.individual import individual, detalle_individual, individual_descriptor, finalizar_individual, exportar
@@ -7,7 +7,7 @@ from .views.individual import individual, detalle_individual, individual_descrip
 app_name = 'elama'
 urlpatterns = [
     # Página de inicio (login).
-    path('', login, name="login"),
+    path('', redirect_to_login, name="login"),
     # Página de cierre de sesión
     path('logout', sign_out, name="logout"),
     # Página creación de autoevaluación (individual o grupal)

@@ -5,10 +5,9 @@
 
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h1>Principios</h1>
-        {% comment %} TODO: Crear vista y template para añadir un principio nuevo{% endcomment %}
-        <a href="{% url 'admin_panel:dashboard' %}" class="btn btn-dark">Nuevo Principio</a>
+        <a href="{% url 'admin_panel:crear_principio' %}" class="btn btn-dark">Nuevo Principio</a>
     </div>
-
+    <hr>
     <div class="table-container" style="height: 81vh; overflow-y: auto;">
         <table id="tabla-principios"
                class="table table-striped table-hover shadow-sm rounded align-middle align-center">
@@ -32,6 +31,8 @@
                     </td>
                     <td> {{ principio.titulo }}</td>
                     <td>{{ principio.estrategia_id }}</td>
+                    <td><a class="btn btn-outline-dark" href="{% url 'admin_panel:editar_principio' principio.id %}">Editar</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

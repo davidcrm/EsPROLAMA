@@ -1,11 +1,12 @@
 {% load django_bootstrap5 %}
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>EsPROLAMA - Dashboard</title>
+    <title>EsPROLAMA - Admin</title>
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     <style>
@@ -68,6 +69,7 @@
         }
     </style>
     {% block styles %}{% endblock %}
+    {% block extrahead %}{% endblock %}
 </head>
 <body>
 

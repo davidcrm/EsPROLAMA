@@ -1,0 +1,60 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block extrahead %}
+  {{ form.media }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <h1>
+            {% if descriptor %}Editar{% else %}Nuevo{% endif %} Descriptor
+        </h1>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-outline-success">
+                {% if descriptor %}Guardar cambios{% else %}Crear Descriptor{% endif %}
+            </button>
+
+            {% if descriptor %}
+                <!-- Botón para abrir el modal de eliminar -->
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                        data-bs-target="#confirmarEliminarModal">
+                    Eliminar descriptor
+                </button>
+            {% endif %}
+        </form>
+
+        <!-- Modal de confirmación para eliminar -->
+        {% if descriptor %}
+            <div class="modal fade" id="confirmarEliminarModal" tabindex="-1"
+                 aria-labelledby="confirmarEliminarModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" action="{% url 'admin_panel:eliminar_descriptor' descriptor.id %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmarEliminarModalLabel">Confirmar eliminación</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                ¿Estás seguro de que quieres eliminar el descriptor?
+                                "<strong>{{ descriptor.titulo }}</strong>"?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

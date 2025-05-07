@@ -5,8 +5,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h1>Descriptores</h1>
-        {% comment %} TODO: Crear vista y template para añadir un descriptor nuevo{% endcomment %}
-        <a href="{% url 'admin_panel:dashboard' %}"  class="btn btn-dark">Nuevo Descriptor</a>
+        <a href="{% url 'admin_panel:crear_descriptor' %}" class="btn btn-dark">Nuevo Descriptor</a>
     </div>
 
     <div class="table-container" style="height: 80vh; overflow-y: auto;">
@@ -34,6 +33,8 @@
                     <td> {{ descriptor.titulo }}</td>
                     <td>{{ descriptor.principio_id }}</td>
                     <td>{{ descriptor.principio.estrategia_id }}</td>
+                    <td><a class="btn btn-outline-dark" href="{% url 'admin_panel:editar_descriptor' descriptor.id %}">Editar</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

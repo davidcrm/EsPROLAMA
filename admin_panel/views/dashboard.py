@@ -5,22 +5,10 @@ from django.shortcuts import render
 @staff_member_required
 def dashboard(request: HttpRequest):
     links = [
-        {
-            'label': 'Dashboard',
-            'href': '/admin_panel/'
-        },
-        {
-            'label': 'Estrategias',
-            'href': '/admin_panel/estrategias/'
-        },
-        {
-            'label': 'Principios',
-            'href': '/admin_panel/principios/'
-        },
-        {
-            'label': 'Descriptores',
-            'href': '/admin_panel/descriptores/'
-        },
+        {'label': 'Dashboard', 'href': '/admin_panel/'},
+        {'label': 'Estrategias', 'href': '/admin_panel/estrategias/'},
+        {'label': 'Principios', 'href': '/admin_panel/principios/'},
+        {'label': 'Descriptores', 'href': '/admin_panel/descriptores/'},
     ]
 
 

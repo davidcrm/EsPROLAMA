@@ -5,10 +5,9 @@
 
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h1>Estrategias</h1>
-        {% comment %} TODO: Crear vista y template para añadir una estrategia nueva{% endcomment %}
-        <a href="{% url 'admin_panel:dashboard' %}" class="btn btn-dark">Nueva Estrategia</a>
+        <a href="{% url 'admin_panel:crear_estrategia' %}" class="btn btn-dark">Nueva Estrategia</a>
     </div>
-
+<hr>
     <div class="table-container" style="height: 81vh; overflow-y: auto;">
         <table id="tabla-estrategias"
                class="table table-striped table-hover shadow-sm rounded align-middle align-center">
@@ -24,6 +23,7 @@
                         </svg>
                     </td>
                     <td>{{ estrategia.titulo }}</td>
+                <td><a class="btn btn-outline-dark" href="{% url 'admin_panel:editar_estrategia' estrategia.id %}">Editar</a></td>
                 </tr>
             {% endfor %}
             </tbody>

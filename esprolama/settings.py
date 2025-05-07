@@ -144,3 +144,22 @@ MEDIA_URL = 'media/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline', 'Strike'],
+            ['NumberedList', 'BulletedList'],
+            ['Format', 'FontSize'],
+            ['RemoveFormat'],
+            ['Maximize']
+        ],
+        'height': 210,
+        'width': 600,
+        'allowedContent': False,
+        'forcePasteAsPlainText': False,
+        'resize_enabled': False,
+    }
+}

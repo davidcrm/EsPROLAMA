@@ -6,7 +6,7 @@ echo "🚀 Iniciando contenedor postgres..."
 docker start elama_postgres
 
 echo "🐍 Iniciando el servidor de Django en modo desarrollo..."
-if ! ./.venv/Scripts/python.exe manage.py runserver 0.0.0.0:8000; then
+if ! ./.venv/bin/python manage.py runserver 0.0.0.0:8000; then
     echo -e "\e[31m❌ Error al ejecutar el servidor de Django.\e[0m"
     exit 1
 fi

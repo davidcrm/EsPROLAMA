@@ -2,19 +2,21 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
+from django.contrib import messages
+
 
 from admin_panel.forms.descriptor_form import DescriptorForm
 from elama.models import Descriptor
 
+links = [
+    {'label': 'Dashboard', 'href': '/admin_panel/'},
+    {'label': 'Estrategias', 'href': '/admin_panel/estrategias/'},
+    {'label': 'Principios', 'href': '/admin_panel/principios/'},
+    {'label': 'Descriptores', 'href': '/admin_panel/descriptores/'},
+]
 
 @staff_member_required
 def descriptor_list(request: HttpRequest):
-    links = [
-        {'label': 'Dashboard', 'href': '/admin_panel/'},
-        {'label': 'Estrategias', 'href': '/admin_panel/estrategias/'},
-        {'label': 'Principios', 'href': '/admin_panel/principios/'},
-        {'label': 'Descriptores', 'href': '/admin_panel/descriptores/'},
-    ]
     descriptores = Descriptor.objects.all().order_by('step')
 
     return render(request,'admin_panel/descriptores_list.html',{
@@ -26,25 +28,28 @@ def descriptor_list(request: HttpRequest):
 # Vista para crear o editar un descriptor
 @staff_member_required
 def detalle_descriptor(request: HttpRequest, descriptor_id: int = None):
-    # Enlaces de navegación del panel de administración
-    links = [
-        {'label': 'Dashboard', 'href': '/admin_panel/'},
-        {'label': 'Estrategias', 'href': '/admin_panel/estrategias/'},
-        {'label': 'Principios', 'href': '/admin_panel/principios/'},
-        {'label': 'Descriptores', 'href': '/admin_panel/descriptores/'},
-    ]
-
-    descriptor = None
-    # Si se recibe un ID, busca la descriptor a editar
-    if descriptor_id:
-        descriptor = Descriptor.objects.get(pk=descriptor_id)
+    descriptor = Descriptor.objects.get(pk=descriptor_id) if descriptor_id else None
 
     # Si el formulario se envía (POST)
     if request.method == 'POST':
-        form = DescriptorForm(request.POST, instance=descriptor)  # Crea o actualiza
+        ultimo_descriptor = Descriptor.objects.filter(step__isnull=False).order_by('step').last()
+        if ultimo_descriptor is None:
+            return redirect('admin_panel:descriptores')
+
+        body = request.POST.copy()
+
+        if descriptor is None:
+            body.update({'step': ultimo_descriptor.step + 1})
+
+        form = DescriptorForm(body, instance=descriptor)  # Crea o actualiza
+
         if form.is_valid():
             form.save()  # Guarda los cambios o crea nueva descriptor
-            return redirect('admin_panel:descriptores')  # Redirige a la lista
+            if not descriptor_id: # Crear (descriptor no existe)
+                return redirect('admin_panel:descriptores')
+            else: # Guardar (descriptor existe)
+                messages.success(request, '¡Operación completada con éxito!')
+
     else:
         form = DescriptorForm(instance=descriptor)  # Formulario vacío o con datos
 
@@ -55,11 +60,11 @@ def detalle_descriptor(request: HttpRequest, descriptor_id: int = None):
         'links': links
     })
 
-
 # Vista para eliminar un descriptor (solo acepta POST)
 @staff_member_required
 @require_POST
-def eliminar_descriptor(request: HttpRequest,descriptor_id: int):
+def eliminar_descriptor(_,descriptor_id: int):
     descriptor = Descriptor.objects.get(pk=descriptor_id)  # Busca el descriptor
-    descriptor.delete()  # Elimina de la base de datos
+    if descriptor:
+        descriptor.delete()  # Elimina de la base de datos
     return redirect('admin_panel:descriptores')  # Redirige a la lista de estrategias

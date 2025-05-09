@@ -1,16 +1,29 @@
 {% extends 'admin_panel/base.html' %}
 {% load django_bootstrap5 %}
 
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/toast.min.css' %}"/>
+{% endblock %}
+
 {% block content %}
 
     <div class="d-flex justify-content-between align-items-center mb-2">
-        <h1>Estrategias</h1>
-        <a href="{% url 'admin_panel:crear_estrategia' %}" class="btn btn-dark">Nueva Estrategia</a>
+        <h2>Estrategias</h1>
+            <a href="{% url 'admin_panel:crear_estrategia' %}" class="btn btn-dark">Nueva Estrategia</a>
     </div>
-<hr>
+    <hr>
     <div class="table-container" style="height: 81vh; overflow-y: auto;">
         <table id="tabla-estrategias"
                class="table table-striped table-hover shadow-sm rounded align-middle align-center">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Estrategia</th>
+                <th></th>
+            </tr>
+            </thead>
             <tbody>
             {% for estrategia in estrategias %}
                 {% comment %} Por cada tr pasamos el id para actualizar el campo step {% endcomment %}
@@ -23,7 +36,8 @@
                         </svg>
                     </td>
                     <td>{{ estrategia.titulo }}</td>
-                <td><a class="btn btn-outline-dark" href="{% url 'admin_panel:editar_estrategia' estrategia.id %}">Editar</a></td>
+                    <td><a class="btn btn-outline-dark" href="{% url 'admin_panel:editar_estrategia' estrategia.id %}">Editar</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -32,47 +46,15 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="{% static 'js/toast.min.js' %}"></script>
+    <script src="{% static 'js/sortable.min.js' %}"></script>
+    <script src="{% static 'js/custom-sortable.js' %}"></script>
     <script>
-        // Metemos el tbody de la tabla en una variable
-        const tabla = document.querySelector('#tabla-estrategias tbody');
-
-        //Creamos un objeto Sortable para poder arrastrar las filas
-        new Sortable(tabla, {
-            animation: 200, // Velocidad de la animacion
-            handle: '.handle', // El elemento arrastrable es el que tiene la clase handle
-            // Función para cambiar el orden
-            onEnd: async () => {
-                // Creamos un array vacío cada vez que se mueva una fila
-                const orden = [];
-                tabla.querySelectorAll('tr').forEach(tr => {
-                    orden.push(tr.dataset.id); // Añade el id de cada fila al array
-                });
-                try {
-                    // Enviar el nuevo orden al backend
-                    const response = await fetch("{% url 'admin_panel:actualizar_orden' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}' // Token de django para evitar problemas
-                        },
-                        body: JSON.stringify({'estrategias': orden}) // mandamos los steps en orden
-                    })
-
-                    // Lanzamos error si la respuesta da error
-                    if (!response.ok) {
-                        throw new Error('Error al actualizar orden');
-                    }
-                    // pasamos la respuesta a json
-                    const data = await response.json();
-                    console.log('Orden actualizado correctamente:', data); // pruebas
-                    // Recargamos la página para ver el nuevo orden
-                    location.reload()
-                } catch (error) {
-                    console.error(error);
-                    alert('Hubo un error al actualizar el orden');
-                }
-            }
+        customSortable({
+            tbody: document.querySelector('#tabla-estrategias tbody'),
+            modelName: 'estrategias',
+            endpoint: '{% url 'admin_panel:actualizar_orden' %}',
+            csrfToken: '{{ csrf_token }}'
         });
     </script>
 {% endblock %}

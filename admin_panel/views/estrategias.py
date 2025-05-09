@@ -6,16 +6,16 @@ from django.views.decorators.http import require_POST
 from admin_panel.forms.estrategia_form import EstrategiaForm
 from elama.models import Estrategia
 
+links = [
+    {'label': 'Dashboard', 'href': '/admin_panel/'},
+    {'label': 'Estrategias', 'href': '/admin_panel/estrategias/'},
+    {'label': 'Principios', 'href': '/admin_panel/principios/'},
+    {'label': 'Descriptores', 'href': '/admin_panel/descriptores/'},
+]
+
 # Vista para listar todas las estrategias disponibles
 @staff_member_required
 def estrategia_list(request: HttpRequest):
-    # Enlaces de navegación del panel de administración
-    links = [
-        {'label': 'Dashboard', 'href': '/admin_panel/'},
-        {'label': 'Estrategias', 'href': '/admin_panel/estrategias/'},
-        {'label': 'Principios', 'href': '/admin_panel/principios/'},
-        {'label': 'Descriptores', 'href': '/admin_panel/descriptores/'},
-    ]
     # Consulta todas las estrategias ordenadas por 'step'
     estrategias = Estrategia.objects.all().order_by('step')
 
@@ -29,18 +29,7 @@ def estrategia_list(request: HttpRequest):
 # Vista para crear o editar una estrategia
 @staff_member_required
 def detalle_estrategia(request: HttpRequest, estrategia_id: int = None):
-    # Enlaces de navegación del panel de administración
-    links = [
-        {'label': 'Dashboard', 'href': '/admin_panel/'},
-        {'label': 'Estrategias', 'href': '/admin_panel/estrategias/'},
-        {'label': 'Principios', 'href': '/admin_panel/principios/'},
-        {'label': 'Descriptores', 'href': '/admin_panel/descriptores/'},
-    ]
-
-    estrategia = None
-    # Si se recibe un ID, busca la estrategia a editar
-    if estrategia_id:
-        estrategia = Estrategia.objects.get(pk=estrategia_id)
+    estrategia = Estrategia.objects.get(pk=estrategia_id) if estrategia_id else None
 
     # Si el formulario se envía (POST)
     if request.method == 'POST':
@@ -62,7 +51,8 @@ def detalle_estrategia(request: HttpRequest, estrategia_id: int = None):
 # Vista para eliminar una estrategia (solo acepta POST)
 @staff_member_required
 @require_POST
-def eliminar_estrategia(request: HttpRequest, estrategia_id: int):
+def eliminar_estrategia(_, estrategia_id: int):
     estrategia = Estrategia.objects.get(pk=estrategia_id)  # Busca la estrategia
-    estrategia.delete()  # Elimina de la base de datos
+    if estrategia:
+        estrategia.delete()  # Elimina de la base de datos
     return redirect('admin_panel:estrategias')  # Redirige a la lista de estrategias

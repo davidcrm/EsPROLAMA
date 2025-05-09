@@ -2,8 +2,33 @@
 {% load static %}
 
 {% block extrahead %}
-  {{ form.media }}
+    {{ form.media }}
 {% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/toast.min.css' %}"/>
+    <style>
+        div:where(.django-ckeditor-widget, #cke_id_contenido_html) {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/toast.min.js' %}"></script>
+    <script>
+        {% for message in messages %}
+            const toastMessage = new Toast({
+                message: '{{ message }}',
+                type: 'success',
+            });
+            setTimeout(() => {
+                toastMessage.toastContainerEl.remove();
+            }, 5000);
+        {% endfor %}
+    </script>
+{% endblock %}
+
 
 {% block content %}
 
@@ -14,18 +39,22 @@
         <hr>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-outline-success">
-                {% if descriptor %}Guardar cambios{% else %}Crear Descriptor{% endif %}
-            </button>
 
-            {% if descriptor %}
-                <!-- Botón para abrir el modal de eliminar -->
-                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
-                        data-bs-target="#confirmarEliminarModal">
-                    Eliminar descriptor
+            {{ form.as_p }}
+            <div class="d-flex justify-content-end w-100">
+
+                {% if descriptor %}
+                    <!-- Botón para abrir el modal de eliminar -->
+                    <button type="button" class="btn btn-outline-danger me-2" data-bs-toggle="modal"
+                            data-bs-target="#confirmarEliminarModal">
+                        Eliminar descriptor
+                    </button>
+                {% endif %}
+
+                <button type="submit" class="btn btn-outline-success">
+                    {% if descriptor %}Guardar cambios{% else %}Crear Descriptor{% endif %}
                 </button>
-            {% endif %}
+            </div>
         </form>
 
         <!-- Modal de confirmación para eliminar -->
@@ -56,5 +85,7 @@
             </div>
         {% endif %}
     </div>
+
+
 
 {% endblock %}

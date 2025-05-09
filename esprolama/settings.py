@@ -156,10 +156,13 @@ CKEDITOR_CONFIGS = {
             ['RemoveFormat'],
             ['Maximize']
         ],
-        'height': 210,
-        'width': 600,
+        'height': 300,
+         'width': 800,
         'allowedContent': False,
         'forcePasteAsPlainText': False,
         'resize_enabled': False,
     }
 }
+
+# COOKIE STORAGE
+MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"

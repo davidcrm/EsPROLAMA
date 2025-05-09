@@ -6,12 +6,12 @@
 {% endblock %}
 
 {% block content %}
-
-    <div class="container">
         <h1>
             {% if descriptor %}Editar{% else %}Nuevo{% endif %} Descriptor
         </h1>
         <hr>
+    <div class="container" style="display: flex; justify-content: center; align-items: center">
+
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}

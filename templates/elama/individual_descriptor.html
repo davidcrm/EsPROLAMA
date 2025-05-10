@@ -175,7 +175,7 @@
 
 {% block scripts %}
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener("DOMContentLoaded", () => {
         const anteriorBtn = document.getElementById("anterior");
         const radios = document.querySelectorAll('input[name="valoracion"]');
         const radioInfoMessage = document.getElementById("radio-info-message");
@@ -207,8 +207,9 @@
           if (seleccionado) {
             const valor = seleccionado.value;
             mensajeSeleccionado.textContent = mensajes[valor] || "";
+            radioInfoMessage.classList.replace("d-none", "d-flex");
           }
-        }
+        };
 
         anteriorBtn.addEventListener("click", () => {
           const form = document.getElementById("descriptor-form");

@@ -1,5 +1,5 @@
 django~=5.1.7
 django_bootstrap5
+django-ckeditor
 psycopg2-binary
-
 xhtml2pdf~=0.2.17

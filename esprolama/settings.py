@@ -33,12 +33,11 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     # Mis aplicaciones.
-    "elama.apps.ElamaConfig",
-    "users.apps.UsersConfig",
-
+    'elama.apps.ElamaConfig',
+    'users.apps.UsersConfig',
     # Aplicaciones de terceros.
     'django_bootstrap5',
-
+    'ckeditor',
     # Aplicaciones de Django predeterminadas.
     'django.contrib.admin',
     'django.contrib.auth',
@@ -137,6 +136,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+LOGIN_URL = '/users/login/'
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
 

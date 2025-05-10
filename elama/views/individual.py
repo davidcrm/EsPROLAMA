@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.urls import reverse
+
 from elama.forms.volcado_form import VolcadoForm
 
 from elama.services.individual_service import IndividualService
-from elama.models import Estrategia, Descriptor, Volcado, autoevaluacion
+from elama.models import Estrategia, Descriptor, Volcado
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, FileResponse
@@ -35,10 +37,17 @@ def detalle_individual(request: HttpRequest, autoevaluacion_id: int):
     estrategias = Estrategia.objects.prefetch_related('principio_set__descriptor_set').all()
     volcados = Volcado.objects.filter(autoevaluacion_id=autoevaluacion_id)
 
+    # Ruta para volver a home (depende si autoevaluación pertenece a grupo)
+    if autoevaluacion.grupo_id:
+        ruta_home = reverse('elama:grupal')
+    else:
+        ruta_home = reverse('elama:individual')
+
     return render(request, 'elama/detalle_individual.html', {
         'autoevaluacion': autoevaluacion,
         'estrategias': estrategias,
-        'volcados': volcados
+        'volcados': volcados,
+        'ruta_home': ruta_home
     })
 
 
@@ -61,6 +70,12 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
         )
 
         if paginacion['ultimo_descriptor'].id != descriptor.id:
+            if 'anterior' in request.POST:
+                return redirect(
+                    'elama:individual-descriptor',
+                    autoevaluacion_id=autoevaluacion.id,
+                    descriptor_id=paginacion['anterior_descriptor'].id
+                )
             return redirect(
                 'elama:individual-descriptor',
                 autoevaluacion_id=autoevaluacion.id,
@@ -108,11 +123,11 @@ def finalizar_individual(request: HttpRequest, autoevaluacion_id: int):
 
 @login_required
 def exportar(request: HttpRequest, autoevaluacion_id: int):
-    autoevaluacion = Autoevaluacion.objects.get(
-        pk=autoevaluacion_id,
-        usuario_id=request.user.id
-    )
-    pdf_file = PdfService.export_autoevaluacion(autoevaluacion)
+    autoevaluacion = Autoevaluacion.objects.filter(
+        Q(pk=autoevaluacion_id),
+        Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
+    ).get()
+    pdf_file = PdfService.export_autoevaluacion_individual(autoevaluacion, request.user)
     return FileResponse(
         pdf_file,
         as_attachment=True,

@@ -95,6 +95,11 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
     else:
         form = VolcadoForm()
 
+    # Deshabilitar los campos logro y mejora si la autoevaluacion está finalizada
+    if autoevaluacion.finalizada:
+        form.fields['logro'].widget.attrs['disabled'] = True
+        form.fields['mejora'].widget.attrs['disabled'] = True
+
     return render(request, 'elama/individual_descriptor.html', {
         'autoevaluacion': autoevaluacion,
         'descriptor': paginacion['siguiente_descriptor'] if request.method == 'POST' else descriptor,

@@ -65,23 +65,28 @@ class PdfService:
                     html_string += f"""
                         <li style="padding-left: {padding_left * puntos}px;">
                             {descriptor.titulo}  {f" &#10132; <strong>{volcado.valoracion}</strong>" if volcado else ''}
-                        </li>
-                    """
+                             """
 
-                   #if volcado:
-                        #if volcado.logro:
-                            # html_string += f"""
-                            # <h4>Logro</h4>
-                            # <p>{volcado.logro}</p>
-                            # """
-                        #if volcado.mejora:
-                            #html_string += f"""
-                            #<h4>Mejora</h4>
-                            #<p>{volcado.mejora}</p>
-                            #"""
+                    """
+                    SI QUEREMOS MOSTRAR LAS ANOTACIONES EN EL PDF
+                    """
+                    if volcado:
+                        if volcado.logro:
+                            html_string += f"""
+                            <h4>Logro</h4>
+                            <p>{volcado.logro}</p>
+                            """
+
+                        if volcado.mejora:
+                            html_string += f"""
+                            <h4>Mejora</h4>
+                            <p>{volcado.mejora}</p>
+                            """
+
 
                 html_string += "</ul>"
             html_string += "</ul>"
+
         html_string += """    
         </body>
         </html>

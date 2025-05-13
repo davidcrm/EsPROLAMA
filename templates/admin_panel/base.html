@@ -76,7 +76,7 @@
 <div class="d-flex flex-row align-items-start">
     <aside class="d-flex flex-column flex-shrink-0" style="width: 280px; height: 100dvh;">
         <a id="app-title"
-           class="navbar-brand pt-3 px-3 fs-5" href="{% url 'elama:home' %}"
+           class="navbar-brand pt-3 px-3 fs-5" href="{% url 'admin_panel:dashboard' %}"
            style="padding-bottom: 10px; transition: .3s all;"
         >
             EsPROLAMA
@@ -97,17 +97,31 @@
         <hr/>
         <form action="{% url 'elama:logout' %}" class="form w-100 pb-3 px-3">
             {% csrf_token %}
-            <button type="submit" class="btn btn-outline-dark w-100">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     class="icon icon-tabler icons-tabler-outline icon-tabler-logout">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/>
-                    <path d="M9 12h12l-3 -3"/>
-                    <path d="M18 15l3 -3"/>
-                </svg>
-                <span>Cerrar sesión</span>
-            </button>
+            <div class="d-flex justify-content-around gap-1">
+
+                <a class="btn btn-outline-light" href="{% url 'elama:home' %}" title="Volver a elama">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-back-up">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M9 14l-4 -4l4 -4"/>
+                        <path d="M5 10h11a4 4 0 1 1 0 8h-1"/>
+                    </svg>
+                    elama
+                </a>
+                <button type="submit" class="btn btn-outline-dark" title="Cerrar Sesión">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="icon icon-tabler icons-tabler-outline icon-tabler-logout">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/>
+                        <path d="M9 12h12l-3 -3"/>
+                        <path d="M18 15l3 -3"/>
+                    </svg>
+                    Cerrar sesión
+                </button>
+            </div>
+
         </form>
     </aside>
     <div class="w-100">

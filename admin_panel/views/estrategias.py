@@ -2,6 +2,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
+from django.contrib import messages
 
 from admin_panel.forms.estrategia_form import EstrategiaForm
 from elama.models import Estrategia
@@ -12,6 +13,7 @@ links = [
     {'label': 'Principios', 'href': '/admin_panel/principios/'},
     {'label': 'Descriptores', 'href': '/admin_panel/descriptores/'},
 ]
+
 
 # Vista para listar todas las estrategias disponibles
 @staff_member_required
@@ -34,9 +36,14 @@ def detalle_estrategia(request: HttpRequest, estrategia_id: int = None):
     # Si el formulario se envía (POST)
     if request.method == 'POST':
         form = EstrategiaForm(request.POST, instance=estrategia)  # Crea o actualiza
+
         if form.is_valid():
             form.save()  # Guarda los cambios o crea nueva estrategia
-            return redirect('admin_panel:estrategias')  # Redirige a la lista
+            if not estrategia_id:  # Crear (estrategia no existe)
+                return redirect('admin_panel:estrategias')  # Redirige a la lista
+            # Actualizar datos de descriptor (descriptor existe)
+            messages.success(request, '¡Estrategia actualizada con éxito!')
+
     else:
         form = EstrategiaForm(instance=estrategia)  # Formulario vacío o con datos
 

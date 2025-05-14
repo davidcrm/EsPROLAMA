@@ -11,6 +11,18 @@
         div:where(.django-ckeditor-widget, #cke_id_contenido_html) {
             width: 100% !important;
         }
+
+        html[data-bs-theme="dark"] .toastjs {
+            background: #333 !important;
+            color: #fff !important;
+            border-left-color: #888 !important;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, .5) !important;
+        }
+
+        html[data-bs-theme="dark"] .toastjs .toastjs-btn {
+            background: #444 !important;
+            color: #fff !important;
+        }
     </style>
 {% endblock %}
 
@@ -29,12 +41,11 @@
     </script>
 {% endblock %}
 
-
 {% block content %}
-        <h1>
-            {% if descriptor %}Editar{% else %}Nuevo{% endif %} Descriptor
-        </h1>
-        <hr>
+    <h1>
+        {% if descriptor %}Editar{% else %}Nuevo{% endif %} Descriptor
+    </h1>
+    <hr>
     <div class="container" style="display: flex; justify-content: center; align-items: center">
 
         <form method="post">
@@ -47,7 +58,7 @@
                     {% comment %} Botón paraabrir el modal de eliminar {% endcomment %}
                     <button type="button" class="btn btn-outline-danger me-2" data-bs-toggle="modal"
                             data-bs-target="#confirmarEliminarModal" title="Eliminar">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
                              class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -62,7 +73,7 @@
 
                 <button type="submit" class="btn btn-outline-success" title="Añadir/Guardar">
                     {% if descriptor %}
-                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                              class="bi bi-save2" viewBox="0 0 16 16">
                             <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v4.5h2a.5.5 0 0 1 .354.854l-2.5 2.5a.5.5 0 0 1-.708 0l-2.5-2.5A.5.5 0 0 1 5.5 6.5h2V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
                         </svg>
@@ -107,7 +118,4 @@
             </div>
         {% endif %}
     </div>
-
-
-
 {% endblock %}

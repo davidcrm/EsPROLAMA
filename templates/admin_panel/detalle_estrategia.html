@@ -1,6 +1,23 @@
 {% extends 'admin_panel/base.html' %}
 {% load static %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/toast.min.css' %}"/>
+    <style>
+        html[data-bs-theme="dark"] .toastjs {
+            background: #333 !important;
+            color: #fff !important;
+            border-left-color: #888 !important;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, .5) !important;
+        }
+
+        html[data-bs-theme="dark"] .toastjs .toastjs-btn {
+            background: #444 !important;
+            color: #fff !important;
+        }
+    </style>
+{% endblock %}
+
 {% block scripts %}
     <script src="{% static 'js/toast.min.js' %}"></script>
     <script>
@@ -64,8 +81,8 @@
 
             </div>
         </form>
-    
-            {% comment %} Modal {% endcomment %}
+
+        {% comment %} Modal {% endcomment %}
         {% if estrategia %}
             <div class="modal fade" id="confirmarEliminarModal" tabindex="-1"
                  aria-labelledby="confirmarEliminarModalLabel" aria-hidden="true">

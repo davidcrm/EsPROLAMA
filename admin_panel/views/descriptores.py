@@ -4,7 +4,6 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 
-
 from admin_panel.forms.descriptor_form import DescriptorForm
 from elama.models import Descriptor
 
@@ -15,12 +14,13 @@ links = [
     {'label': 'Descriptores', 'href': '/admin_panel/descriptores/'},
 ]
 
+
 @staff_member_required
 def descriptor_list(request: HttpRequest):
     descriptores = Descriptor.objects.all().order_by('step')
 
-    return render(request,'admin_panel/descriptores_list.html',{
-        'descriptores':descriptores,
+    return render(request, 'admin_panel/descriptores_list.html', {
+        'descriptores': descriptores,
         'links': links,
     })
 
@@ -44,11 +44,11 @@ def detalle_descriptor(request: HttpRequest, descriptor_id: int = None):
         form = DescriptorForm(body, instance=descriptor)  # Crea o actualiza
 
         if form.is_valid():
-            form.save()  # Guarda los cambios o crea nueva descriptor
-            if not descriptor_id: # Crear (descriptor no existe)
+            form.save()  # Guarda los cambios o crea nuevo descriptor
+            if not descriptor_id:  # Crear (descriptor no existe)
                 return redirect('admin_panel:descriptores')
-            else: # Guardar (descriptor existe)
-                messages.success(request, '¡Operación completada con éxito!')
+            # Actualizar datos de descriptor (descriptor existe)
+            messages.success(request, '¡Descriptor actualizado con éxito!')
 
     else:
         form = DescriptorForm(instance=descriptor)  # Formulario vacío o con datos
@@ -60,10 +60,11 @@ def detalle_descriptor(request: HttpRequest, descriptor_id: int = None):
         'links': links
     })
 
+
 # Vista para eliminar un descriptor (solo acepta POST)
 @staff_member_required
 @require_POST
-def eliminar_descriptor(_,descriptor_id: int):
+def eliminar_descriptor(_, descriptor_id: int):
     descriptor = Descriptor.objects.get(pk=descriptor_id)  # Busca el descriptor
     if descriptor:
         descriptor.delete()  # Elimina de la base de datos

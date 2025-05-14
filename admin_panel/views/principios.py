@@ -2,6 +2,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
+from django.contrib import messages
 
 from admin_panel.forms.principio_form import PrincipioForm
 from elama.models import Principio
@@ -12,6 +13,7 @@ links = [
     {'label': 'Principios', 'href': '/admin_panel/principios/'},
     {'label': 'Descriptores', 'href': '/admin_panel/descriptores/'},
 ]
+
 
 @staff_member_required
 def principios_list(request: HttpRequest):
@@ -30,9 +32,13 @@ def detalle_principio(request: HttpRequest, principio_id: int = None):
     # Si el formulario se envía (POST)
     if request.method == 'POST':
         form = PrincipioForm(request.POST, instance=principio)  # Crea o actualiza
-        if form.is_valid():
-            form.save()  # Guarda los cambios o crea nueva principio
-            return redirect('admin_panel:principios')  # Redirige a la lista
+        form.save()  # Guarda los cambios o crea nuevo principio
+
+        if not principio_id:  # Crear principio (principio no existe)
+            return redirect('admin_panel:principios')
+        # Actualizar datos de principio (principio existe)
+        messages.success(request, '¡Principio actualizado con éxito!')
+
     else:
         form = PrincipioForm(instance=principio)  # Formulario vacío o con datos
 

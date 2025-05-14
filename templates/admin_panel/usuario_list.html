@@ -1,6 +1,5 @@
 {% extends 'admin_panel/base.html' %}
 {% load django_bootstrap5 %}
-
 {% load static %}
 
 {% block styles %}
@@ -9,9 +8,9 @@
 
 {% block content %}
 
-    <div class="d-flex justify-content-between align-items-center mb-2">
-        <h2>Estrategias</h2>
-        <a href="{% url 'admin_panel:crear_estrategia' %}" class="btn btn-dark" title="Añadir Estrategia">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Usuarios</h2>
+        <a href="{% url 'admin_panel:crear_usuario' %}" class="btn btn-dark" title="Añadir Usuario">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                  class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
@@ -21,31 +20,25 @@
             </svg>
         </a>
     </div>
-    <hr>
+
     <div class="table-container" style="height: 81vh; overflow-y: auto;">
-        <table id="tabla-estrategias"
+        <table id="tabla-principios"
                class="table table-striped table-hover shadow-sm rounded align-middle align-center">
             <thead>
             <tr>
-                <th></th>
-                <th>Estrategia</th>
+                <th>Usuario</th>
+                <th>Email</th>
                 <th>Acciones</th>
             </tr>
             </thead>
+
             <tbody>
-            {% for estrategia in estrategias %}
-                {% comment %} Por cada tr pasamos el id para actualizar el campo step {% endcomment %}
-                <tr data-id="{{ estrategia.id }}">
-                    <td class="handle" style="cursor: grab;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-                        </svg>
-                    </td>
-                    <td>{{ estrategia.titulo }}</td>
+            {% for usuario in usuarios %}
+                <tr data-id="{{ usuario.id }}">
+                    <td> {{ usuario.username }}</td>
+                    <td>{{ usuario.email }} {% if usuario.email %} {% else %} - {% endif %} </td>
                     <td>
-                        <a class="btn btn-outline-dark" href="{% url 'admin_panel:editar_estrategia' estrategia.id %}"
+                        <a class="btn btn-outline-dark" href="{% url 'admin_panel:editar_usuario' usuario.id %}"
                            title="Editar">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -78,18 +71,11 @@
             </tbody>
         </table>
     </div>
+
+
 {% endblock %}
+
 
 {% block scripts %}
     <script src="{% static 'js/toast.min.js' %}"></script>
-    <script src="{% static 'js/sortable.min.js' %}"></script>
-    <script src="{% static 'js/custom-sortable.js' %}"></script>
-    <script>
-        customSortable({
-            tbody: document.querySelector('#tabla-estrategias tbody'),
-            modelName: 'estrategias',
-            endpoint: '{% url 'admin_panel:actualizar_orden' %}',
-            csrfToken: '{{ csrf_token }}'
-        });
-    </script>
 {% endblock %}

@@ -11,10 +11,10 @@ from admin_panel.forms.usuario_form import UsuarioForm
 
 links = [
     {'label': 'Dashboard', 'href': '/admin_panel/'},
+    {'label': 'Usuarios', 'href': '/admin_panel/usuarios/'},
     {'label': 'Estrategias', 'href': '/admin_panel/estrategias/'},
     {'label': 'Principios', 'href': '/admin_panel/principios/'},
     {'label': 'Descriptores', 'href': '/admin_panel/descriptores/'},
-    {'label': 'Usuarios', 'href': '/admin_panel/usuarios/'},
 ]
 
 

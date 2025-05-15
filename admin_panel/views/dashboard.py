@@ -6,10 +6,10 @@ from django.shortcuts import render
 def dashboard(request: HttpRequest):
     links = [
         {'label': 'Dashboard', 'href': '/admin_panel/'},
+        {'label': 'Usuarios', 'href': '/admin_panel/usuarios/'},
         {'label': 'Estrategias', 'href': '/admin_panel/estrategias/'},
         {'label': 'Principios', 'href': '/admin_panel/principios/'},
         {'label': 'Descriptores', 'href': '/admin_panel/descriptores/'},
-        {'label': 'Usuarios', 'href': '/admin_panel/usuarios/'},
     ]
 
 

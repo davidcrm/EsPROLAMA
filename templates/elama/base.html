@@ -63,9 +63,11 @@
             </ul>
         </div>
         {% if user.is_authenticated %}
+            
             <div class="d-flex align-items-center gap-2">
                 <span class="navbar-text">Hola, <span style="font-weight: bold">{{ user.username }}</span>.</span>
-                <a class="btn btn-outline-dark" href="{% url 'admin_panel:dashboard' %}">
+                {% if user.is_staff %}
+                <a class="btn btn-outline-dark" href="{% url 'admin_panel:dashboard' %}" title="Administración">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                          class="icon icon-tabler icons-tabler-outline icon-tabler-user-shield">
@@ -75,9 +77,10 @@
                         <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
                     </svg>
                 </a>
+                    {% endif %}
                 <form action="{% url 'elama:logout' %}" class="form">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-outline-dark">
+                    <button type="submit" class="btn btn-outline-dark" title="Cerrar sesión">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                              class="icon icon-tabler icons-tabler-outline icon-tabler-logout">
@@ -99,7 +102,7 @@
 
 <footer class="mt-5 pt-5 pb-2">
     <p class="text-center">
-        Desarrollada por <a class="btn btn-outline-dark" href="" data-bs-toggle="modal"
+        Desarrollada por <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="" data-bs-toggle="modal"
                             data-bs-target="#equipoModal">
         alumnado</a> del CFGS en Desarrollo de Aplicaciones Multiplataforma del IES Lomo de La Herradura
         (promoción 2023-2025).

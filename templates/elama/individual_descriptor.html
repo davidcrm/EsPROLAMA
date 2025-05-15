@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block content %}
-    <a class="btn btn-outline-dark mb-3" href="{% url 'elama:individual-detail' autoevaluacion.id %}" title="Home">
+    <a class="btn btn-outline-dark mb-3" href="{% url 'elama:individual-detail' autoevaluacion.id %}">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-house-door"
              viewBox="0 0 16 16">
             <path
@@ -29,12 +29,11 @@
     <h3 class="text-center mt-5">AUTOEVALUACIÓN INDIVIDUAL</h3>
     <div class="d-flex align-items-center justify-content-between gap-3 my-3">
         <button
-                id="anterior"
-                class="btn btn-outline-dark"
-                {% if  primer_descriptor.id == descriptor.id %}
-                disabled
-                {% endif %}
-                title="Anterior"
+            id="anterior"
+            class="btn btn-outline-dark"
+            {% if  primer_descriptor.id == descriptor.id %}
+            disabled
+            {% endif %}
         >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -44,7 +43,7 @@
                         d="M20 15h-8v3.586a1 1 0 0 1 -1.707 .707l-6.586 -6.586a1 1 0 0 1 0 -1.414l6.586 -6.586a1 1 0 0 1 1.707 .707v3.586h8a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1z"/>
             </svg>
         </button>
-        <button type="submit" id="siguiente" form="descriptor-form" class="btn btn-outline-dark" title="Siguiente">
+        <button type="submit" id="siguiente" form="descriptor-form" class="btn btn-outline-dark">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-big-right">
@@ -71,7 +70,7 @@
     <div class="d-flex justify-content-end">
         <button id="info-button" type="button" class="bg-transparent border-0 p-0 m-0 text-warning"
                 data-bs-toggle="modal"
-                data-bs-target="#modalInformacionValores" title="Valores escala">
+                data-bs-target="#modalInformacionValores">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                  class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle">
@@ -176,59 +175,59 @@
 
 {% block scripts %}
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const anteriorBtn = document.getElementById("anterior");
-            const radios = document.querySelectorAll('input[name="valoracion"]');
-            const radioInfoMessage = document.getElementById("radio-info-message");
-            const mensajeSeleccionado = document.getElementById("valoracion-mensaje");
+      document.addEventListener("DOMContentLoaded", () => {
+        const anteriorBtn = document.getElementById("anterior");
+        const radios = document.querySelectorAll('input[name="valoracion"]');
+        const radioInfoMessage = document.getElementById("radio-info-message");
+        const mensajeSeleccionado = document.getElementById("valoracion-mensaje");
 
-            const mensajes = {
-                1: "No os preocupéis. Lo importante es tomar conciencia y ponerse manos a la obra. Sois un equipo. ",
-                2: "Os felicitamos. Ya habéis empezado a trabajar en la dirección que os va a llevar a construir un proyecto sólido. Todas las concreciones necesitan primeros pasos.",
-                3: "Felicidades, es importante reconocerse los logros. No dejéis de pensar si ese resultado es fruto de acciones que están consolidadas o de iniciativas puntuales. El trabajo en equipo y constante es el que os llevará mucho más lejos. No os olvidéis de implicar a toda la comunidad educativa de vuestra entidad.",
-                4: "Enhorabuena. Vuestro programa responde a vuestras expectativas en relación a este principio. No obstante, seguro que queréis profundizar en vuestras prácticas, experimentar nuevas ideas y ensayar iniciativas que estén dando buenos resultados en otras entidades.",
-            };
+        const mensajes = {
+            1: "No os preocupéis. Lo importante es tomar conciencia y ponerse manos a la obra. Sois un equipo. ",
+            2: "Os felicitamos. Ya habéis empezado a trabajar en la dirección que os va a llevar a construir un proyecto sólido. Todas las concreciones necesitan primeros pasos.",
+            3: "Felicidades, es importante reconocerse los logros. No dejéis de pensar si ese resultado es fruto de acciones que están consolidadas o de iniciativas puntuales. El trabajo en equipo y constante es el que os llevará mucho más lejos. No os olvidéis de implicar a toda la comunidad educativa de vuestra entidad.",
+            4: "Enhorabuena. Vuestro programa responde a vuestras expectativas en relación a este principio. No obstante, seguro que queréis profundizar en vuestras prácticas, experimentar nuevas ideas y ensayar iniciativas que estén dando buenos resultados en otras entidades.",
+        };
 
-            const actualizarRadio = ({target}) => {
-                const valor = target.value;
-                if (valorSeleccionado === valor) {
-                    target.checked = false;
-                    valorSeleccionado = null;
-                    radioInfoMessage.classList.replace("d-flex", "d-none");
-                    mensajeSeleccionado.textContent = "";
-                } else {
-                    radioInfoMessage.classList.replace("d-none", "d-flex");
-                    valorSeleccionado = valor;
-                    mensajeSeleccionado.textContent = mensajes[valor] || "";
-                }
-            };
+        const actualizarRadio = ({target}) => {
+          const valor = target.value;
+          if (valorSeleccionado === valor) {
+            target.checked = false;
+            valorSeleccionado = null;
+            radioInfoMessage.classList.replace("d-flex", "d-none");
+            mensajeSeleccionado.textContent = "";
+          } else {
+            radioInfoMessage.classList.replace("d-none", "d-flex");
+            valorSeleccionado = valor;
+            mensajeSeleccionado.textContent = mensajes[valor] || "";
+          }
+        };
 
-            const actualizarMensaje = () => {
-                const seleccionado = document.querySelector('input[name="valoracion"]:checked');
-                if (seleccionado) {
-                    const valor = seleccionado.value;
-                    mensajeSeleccionado.textContent = mensajes[valor] || "";
-                    radioInfoMessage.classList.replace("d-none", "d-flex");
-                }
-            };
+        const actualizarMensaje = () => {
+            const seleccionado = document.querySelector('input[name="valoracion"]:checked');
+            if (seleccionado) {
+                const valor = seleccionado.value;
+                mensajeSeleccionado.textContent = mensajes[valor] || "";
+            }
+        }
 
-            anteriorBtn.addEventListener("click", () => {
-                const form = document.getElementById("descriptor-form");
-                const input = document.createElement("input");
-                input.type = "hidden";
-                input.name = "anterior";
-                input.value = "True";
-                form.appendChild(input);
-                form.submit();
-            });
+        anteriorBtn.addEventListener("click", () => {
+          const form = document.getElementById("descriptor-form");
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = "anterior";
+          input.value = "True";
+          form.appendChild(input);
+          form.submit();
+        });
 
-            let valorSeleccionado = null;
+        let valorSeleccionado = null;
 
             radios.forEach(radio => {
                 radio.addEventListener("click", actualizarRadio);
                 radio.addEventListener("change", actualizarMensaje);
             });
 
+            // Mostrar mensaje si ya hay un valor preseleccionado
             actualizarMensaje();
         });
     </script>

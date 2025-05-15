@@ -32,7 +32,7 @@ echo "🔄 Actualizando apt e instalando pgloader en el contenedor $containerNam
 docker exec "$containerName" bash -c "apt update -y && apt install -y pgloader"
 
 echo "🔄 Ejecutando migraciones Django (si aplica)..."
-python manage.py migrate
+python3 manage.py migrate
 
 echo "🔄 Copiando db.sqlite3 al contenedor $containerName..."
 docker cp db.sqlite3 "${containerName}:/tmp/db.sqlite3"

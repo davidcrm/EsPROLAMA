@@ -145,7 +145,7 @@ MEDIA_URL = 'media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+# Editor de texto enriquecido
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Custom',
@@ -166,3 +166,12 @@ CKEDITOR_CONFIGS = {
 
 # COOKIE STORAGE
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
+
+# Configuración de correo
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # o el servidor SMTP que uses
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'tucorreo@gmail.com' # Cambiar para usar
+EMAIL_HOST_PASSWORD = 'tu_contraseña_o_app_password' # Cambiar para usar
+DEFAULT_FROM_EMAIL = 'tucorreo@gmail.com' # Cambiar para usar

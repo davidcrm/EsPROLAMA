@@ -2,6 +2,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpRequest
 from django.shortcuts import render
 
+
 @staff_member_required
 def dashboard(request: HttpRequest):
     links = [

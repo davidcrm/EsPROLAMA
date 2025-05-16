@@ -1,24 +1,37 @@
-{% extends "elama/base.html"  %}
+{% extends "elama/base.html" %}
 {% load django_bootstrap5 %}
 
 {% block content %}
-    <h1 class="text-center">
-        Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
-        Migrantes Adultos (EsPROLAMA)
-    </h1>
 
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-4">
-                <form action="{% url 'users:login' %}" method="post" class="form">
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-                    <div style="display: flex; justify-content: center; align-items: center">
-                    {% bootstrap_button button_type="submit" content="Iniciar sesión" %}
-                </div>
-                    <input type="hidden" name="next" value="{% url 'elama:home' %}"/>
-                </form>
+    {% if  user.is_active %}
+        <div class="d-flex flex-column justify-content-center align-items-center vh-50 text-center">
+            <p class="mb-4 fs-5">
+                Has iniciado sesión como <strong>{{ user.username }}</strong>.
+            </p>
+            <div class="d-flex gap-3">
+                <a class="btn btn-outline-dark" href="{% url 'elama:home' %}">Ir a Home</a>
+                <a class="btn btn-outline-dark" href="{% url 'elama:logout' %}">Cerrar sesión</a>
             </div>
         </div>
-    </div>
+    {% else %}
+        <h1 class="text-center">
+            Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
+            Migrantes Adultos (EsPROLAMA)
+        </h1>
+
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-4">
+                    <form action="{% url 'users:login' %}" method="post" class="form">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        <div style="display: flex; justify-content: center; align-items: center">
+                            {% bootstrap_button button_type="submit" content="Iniciar sesión" %}
+                        </div>
+                        <input type="hidden" name="next" value="{% url 'elama:home' %}"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock content %}

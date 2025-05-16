@@ -16,11 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('ZRQqb4xnhTMSfGXcyVooEtR8gWxzPKMc/', admin.site.urls),
     path('admin_panel/', include('admin_panel.urls')),
     path('', include('elama.urls')),
     path('users/', include('users.urls')),
-
+    # estas vistas no dependen de una app concreta. Son genéricas del sistema de autenticación de Django por eso van aqui
+    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]

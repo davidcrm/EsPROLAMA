@@ -4,13 +4,19 @@ from django.contrib.auth.models import User
 
 
 class UsuarioForm(forms.ModelForm):
+    password = forms.CharField(
+        label= 'Contraseña',
+        widget= forms.PasswordInput(attrs={'class': 'form-control'}),
+        required= False # Opcional para edición
+    )
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name', 'last_name', 'email', 'password']
         labels = {
             'first_name': 'Nombre',
             'last_name': 'Apellidos',
-            'email': 'Correo electrónico'
+            'email': 'Correo electrónico',
+            'password': 'Contraseña',
         }
         widgets = {
             'first_name': forms.TextInput(attrs={
@@ -22,8 +28,15 @@ class UsuarioForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Introduce el email del usuario'
-            })
+            }),
+
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Si el usuario ya existe (es edición), quitamos el campo contraseña
+        if self.instance and self.instance.pk:
+            self.fields.pop('password')
 
     # Sobreescribimos el métod0 save del formulario
     def save(self, commit=True):
@@ -54,7 +67,18 @@ class UsuarioForm(forms.ModelForm):
         user.username = username
 
         # Lo guardamos
+        password = self.cleaned_data.get('password')
+        if password:
+            user.set_password(password)
+
         if commit:
             user.save()
 
         return user
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.instance.pk:  # Si es un usuario nuevo carga el campo contraseña
+            password = cleaned_data.get('password')
+            if not password:
+                self.add_error('password', 'La contraseña es obligatoria al crear un usuario.')

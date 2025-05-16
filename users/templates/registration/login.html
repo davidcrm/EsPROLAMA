@@ -25,13 +25,19 @@
                     <form action="{% url 'users:login' %}" method="post" class="form">
                         {% csrf_token %}
                         {% bootstrap_form form %}
-                        <div style="display: flex; justify-content: center; align-items: center">
+                        <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-200-hover small opacity-75"
+                           href="{% url 'password_reset' %}">
+                            Cambiar contraseña
+                        </a>
+                        <div class="mt-2" style="display: flex; justify-content: center; align-items: center">
                             {% bootstrap_button button_type="submit" content="Iniciar sesión" %}
                         </div>
+
                         <input type="hidden" name="next" value="{% url 'elama:home' %}"/>
                     </form>
                 </div>
             </div>
+
         </div>
     {% endif %}
 {% endblock content %}

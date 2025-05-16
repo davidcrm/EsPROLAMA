@@ -65,7 +65,7 @@
         {% if user.is_authenticated %}
             
             <div class="d-flex align-items-center gap-2">
-                <span class="navbar-text">Hola, <span style="font-weight: bold">{{ user.username }}</span>.</span>
+                <span class="navbar-text">Hola, <span style="font-weight: bold">{{ user.first_name }}</span>.</span>
                 {% if user.is_staff %}
                 <a class="btn btn-outline-dark" href="{% url 'admin_panel:dashboard' %}" title="Administración">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"

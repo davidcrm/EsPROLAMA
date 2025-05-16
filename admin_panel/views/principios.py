@@ -18,6 +18,16 @@ links = [
 
 @staff_member_required
 def principios_list(request: HttpRequest):
+    """
+    Obtiene y muestra la lista de todos los principios ordenados por 'step'.
+
+    Args:
+        request (HttpRequest): Objeto de la petición HTTP.
+
+    Returns:
+        HttpResponse: Renderiza la plantilla 'admin_panel/principios_list.html'
+                      con los principios y enlaces de navegación.
+    """
     principios = Principio.objects.all().order_by('step')
 
     return render(request, 'admin_panel/principios_list.html', {
@@ -28,6 +38,20 @@ def principios_list(request: HttpRequest):
 
 @staff_member_required
 def detalle_principio(request: HttpRequest, principio_id: int = None):
+    """
+    Vista para crear o editar un principio.
+
+    Si se proporciona un principio_id, edita el principio correspondiente.
+    Si no, crea uno nuevo.
+
+    Args:
+        request (HttpRequest): Objeto de la petición HTTP.
+        principio_id (int, opcional): ID del principio a editar. Por defecto None.
+
+    Returns:
+        HttpResponse: Renderiza la plantilla 'admin_panel/detalle_principio.html'
+                      con el formulario correspondiente.
+    """
     principio = Principio.objects.get(pk=principio_id) if principio_id else None
 
     # Si el formulario se envía (POST)
@@ -54,6 +78,18 @@ def detalle_principio(request: HttpRequest, principio_id: int = None):
 @staff_member_required
 @require_POST
 def eliminar_principio(_, principio_id: int):
+    """
+    Elimina un principio dado su ID.
+
+    Solo acepta peticiones POST. Acceso restringido a staff.
+
+    Args:
+        _ (HttpRequest): Objeto de la petición HTTP (no se usa).
+        principio_id (int): ID del principio a eliminar.
+
+    Returns:
+        HttpResponseRedirect: Redirige a la lista de principios tras eliminar el principio.
+    """
     principio = Principio.objects.get(pk=principio_id)  # Busca el principio
     if principio:
         principio.delete()  # Elimina de la base de datos

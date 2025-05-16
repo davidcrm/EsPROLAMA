@@ -1,20 +1,30 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.urls import reverse
-
-from elama.forms.volcado_form import VolcadoForm
-
-from elama.services.individual_service import IndividualService
-from elama.models import Estrategia, Descriptor, Volcado
-
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, FileResponse
-from elama.models import Autoevaluacion
+
+from elama.forms.volcado_form import VolcadoForm
+from elama.services.individual_service import IndividualService
+from elama.models import Estrategia, Descriptor, Volcado, Autoevaluacion
 from elama.services.pdf_service import PdfService
 
 
 @login_required
 def individual(request: HttpRequest):
+    """
+    Vista para mostrar la lista de autoevaluaciones individuales del usuario autenticado
+    o crear una nueva autoevaluación al recibir POST.
+
+    GET: Muestra las autoevaluaciones sin grupo del usuario.
+    POST: Crea una nueva autoevaluación y redirige a su detalle.
+
+    Args:
+        request (HttpRequest): Objeto de la petición HTTP.
+
+    Returns:
+        HttpResponse: Renderiza la plantilla con autoevaluaciones o redirige a detalle.
+    """
     if request.method == 'POST':
         autoevaluacion = Autoevaluacion(usuario_id=request.user.id)
         autoevaluacion.save()
@@ -30,14 +40,26 @@ def individual(request: HttpRequest):
 
 @login_required
 def detalle_individual(request: HttpRequest, autoevaluacion_id: int):
+    """
+    Muestra el detalle de una autoevaluación individual o grupal
+    si el usuario es propietario o responsable del grupo.
+
+    Args:
+        request (HttpRequest): Objeto de la petición HTTP.
+        autoevaluacion_id (int): ID de la autoevaluación a mostrar.
+
+    Returns:
+        HttpResponse: Renderiza el detalle con estrategias y volcados.
+    """
     autoevaluacion = Autoevaluacion.objects.filter(
         Q(pk=autoevaluacion_id),
         Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
     ).get()
+
     estrategias = Estrategia.objects.prefetch_related('principio_set__descriptor_set').all()
     volcados = Volcado.objects.filter(autoevaluacion_id=autoevaluacion_id)
 
-    # Ruta para volver a home (depende si autoevaluación pertenece a grupo)
+    # Define ruta de regreso dependiendo si es grupal o individual
     if autoevaluacion.grupo_id:
         ruta_home = reverse('elama:grupal')
     else:
@@ -53,13 +75,26 @@ def detalle_individual(request: HttpRequest, autoevaluacion_id: int):
 
 @login_required
 def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descriptor_id: int):
+    """
+    Vista para mostrar y editar un descriptor específico dentro de una autoevaluación.
+
+    Permite navegar entre descriptores y guardar volcados asociados.
+
+    Args:
+        request (HttpRequest): Objeto de la petición HTTP.
+        autoevaluacion_id (int): ID de la autoevaluación.
+        descriptor_id (int): ID del descriptor a mostrar.
+
+    Returns:
+        HttpResponse: Renderiza formulario para el descriptor o redirige según paginación.
+    """
     individual_service = IndividualService()
     autoevaluacion = Autoevaluacion.objects.filter(
         Q(pk=autoevaluacion_id),
         Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
     ).get()
-    descriptor = Descriptor.objects.prefetch_related("principio__descriptor_set").get(pk=descriptor_id)
 
+    descriptor = Descriptor.objects.prefetch_related("principio__descriptor_set").get(pk=descriptor_id)
     paginacion = individual_service.paginacion(descriptor)
 
     if request.method == 'POST':
@@ -69,6 +104,7 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
             descriptor=descriptor
         )
 
+        # Navega entre descriptores o vuelve al detalle cuando es el último
         if paginacion['ultimo_descriptor'].id != descriptor.id:
             if 'anterior' in request.POST:
                 return redirect(
@@ -89,13 +125,10 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
         descriptor_id=descriptor.id,
     ).first()
 
-    # Si existe un volcado, se carga el formulario con los datos del volcado para poder editar
-    if volcado is not None:
-        form = VolcadoForm(instance=volcado)
-    else:
-        form = VolcadoForm()
+    # Carga el formulario con datos si existe el volcado, sino vacío
+    form = VolcadoForm(instance=volcado) if volcado else VolcadoForm()
 
-    # Deshabilitar los campos logro y mejora si la autoevaluacion está finalizada
+    # Deshabilita campos logro y mejora si la autoevaluación está finalizada
     if autoevaluacion.finalizada:
         form.fields['logro'].widget.attrs['disabled'] = True
         form.fields['mejora'].widget.attrs['disabled'] = True
@@ -108,25 +141,50 @@ def individual_descriptor(request: HttpRequest, autoevaluacion_id: int, descript
     })
 
 
-# Vista para finalizar una autoevaluación, marcándola como finalizada.
 @login_required
 def finalizar_individual(request: HttpRequest, autoevaluacion_id: int):
+    """
+    Marca una autoevaluación como finalizada.
+
+    Solo puede hacerlo el propietario o el responsable del grupo.
+
+    Args:
+        request (HttpRequest): Objeto de la petición HTTP.
+        autoevaluacion_id (int): ID de la autoevaluación a finalizar.
+
+    Returns:
+        HttpResponseRedirect: Redirige al detalle de la autoevaluación.
+    """
     autoevaluacion = Autoevaluacion.objects.filter(
         Q(pk=autoevaluacion_id),
         Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
     ).get()
-    autoevaluacion.finalizada = True  # Marca la autoevaluación como finalizada.
-    autoevaluacion.save()  # Guarda los cambios.
 
-    return redirect('elama:individual-detail', autoevaluacion_id=autoevaluacion_id)  # Redirige a la vista individual.
+    autoevaluacion.finalizada = True  # Marca como finalizada
+    autoevaluacion.save()  # Guarda cambios
+
+    return redirect('elama:individual-detail', autoevaluacion_id=autoevaluacion_id)
 
 
 @login_required
 def exportar(request: HttpRequest, autoevaluacion_id: int):
+    """
+    Genera y descarga un PDF con la autoevaluación individual.
+
+    Solo accesible para propietario o responsable del grupo.
+
+    Args:
+        request (HttpRequest): Objeto de la petición HTTP.
+        autoevaluacion_id (int): ID de la autoevaluación a exportar.
+
+    Returns:
+        FileResponse: Respuesta con el archivo PDF adjunto.
+    """
     autoevaluacion = Autoevaluacion.objects.filter(
         Q(pk=autoevaluacion_id),
         Q(usuario_id=request.user.id) | Q(grupo__responsable_id=request.user.id)
     ).get()
+
     pdf_file = PdfService.export_autoevaluacion_individual(autoevaluacion, request.user)
     return FileResponse(
         pdf_file,

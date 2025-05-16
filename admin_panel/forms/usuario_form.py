@@ -6,11 +6,12 @@ from django.contrib.auth.models import User
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name', 'last_name', 'email', 'password']
         labels = {
             'first_name': 'Nombre',
             'last_name': 'Apellidos',
-            'email': 'Correo electrónico'
+            'email': 'Correo electrónico',
+            'password': 'Contraseña',
         }
         widgets = {
             'first_name': forms.TextInput(attrs={
@@ -22,6 +23,9 @@ class UsuarioForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Introduce el email del usuario'
+            }),
+            'password': forms.TextInput({
+                'class': 'form-control',
             })
         }
 
@@ -54,6 +58,10 @@ class UsuarioForm(forms.ModelForm):
         user.username = username
 
         # Lo guardamos
+        password = self.cleaned_data.get('password')
+        if password:
+            user.set_password(password)
+
         if commit:
             user.save()
 

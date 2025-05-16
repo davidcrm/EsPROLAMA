@@ -4,6 +4,11 @@ from django.contrib.auth.models import User
 
 
 class UsuarioForm(forms.ModelForm):
+    password = forms.CharField(
+        label= 'Contraseña',
+        widget= forms.PasswordInput(attrs={'class': 'form-control'}),
+        required= False # Opcional para edición
+    )
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'password']
@@ -24,10 +29,14 @@ class UsuarioForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Introduce el email del usuario'
             }),
-            'password': forms.TextInput({
-                'class': 'form-control',
-            })
+
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Si el usuario ya existe (es edición), quitamos el campo contraseña
+        if self.instance and self.instance.pk:
+            self.fields.pop('password')
 
     # Sobreescribimos el métod0 save del formulario
     def save(self, commit=True):
@@ -66,3 +75,10 @@ class UsuarioForm(forms.ModelForm):
             user.save()
 
         return user
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.instance.pk:  # Si es un usuario nuevo carga el campo contraseña
+            password = cleaned_data.get('password')
+            if not password:
+                self.add_error('password', 'La contraseña es obligatoria al crear un usuario.')

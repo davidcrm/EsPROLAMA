@@ -7,13 +7,13 @@
 {% endblock %}
 
 {% block content %}
-
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between align-items-center mb-2">
         <h2>Principios</h2>
         <a href="{% url 'admin_panel:crear_principio' %}" class="btn btn-dark" title="Añadir Principio">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <!-- icono “+” -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                 class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+                 class="icon icon-tabler icons-tabler-plus">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                 <path d="M12 5l0 14"/>
                 <path d="M5 12l14 0"/>
@@ -21,9 +21,9 @@
         </a>
     </div>
 
-    <div class="table-container" style="height: 81vh; overflow-y: auto;">
+    <div class="table-container" style="height: 80vh; overflow-y: auto;">
         <table id="tabla-principios"
-               class="table table-striped table-hover shadow-sm rounded align-middle align-center">
+               class="table table-striped table-hover shadow-sm rounded align-middle">
             <thead>
             <tr>
                 <th></th>
@@ -32,40 +32,51 @@
                 <th>Acciones</th>
             </tr>
             </thead>
-
             <tbody>
             {% for principio in principios %}
                 <tr data-id="{{ principio.id }}">
                     <td class="handle" style="cursor: grab;">
+                        <!-- icono drag -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path fill-rule="evenodd"
                                   d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
                         </svg>
                     </td>
-                    <td> {{ principio.titulo }}</td>
+                    <td>{{ principio.titulo }}</td>
                     <td>{{ principio.estrategia_id }}</td>
                     <td>
                         <div class="d-flex align-items-center gap-2">
-                            <a class="btn btn-outline-dark" href="{% url 'admin_panel:editar_principio' principio.id %}"
+                            <a class="btn btn-outline-dark"
+                               href="{% url 'admin_panel:editar_principio' principio.id %}"
                                title="Editar">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                <!-- icono editar -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                      stroke-linejoin="round"
-                                     class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
+                                     class="icon icon-tabler icons-tabler-pencil">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                     <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/>
                                     <path d="M13.5 6.5l4 4"/>
                                 </svg>
                             </a>
-                            {% comment %} TODO: Modal para eliminar usuario que funcione {% endcomment %}
-                            <button type="button" class="btn btn-outline-danger me-2" data-bs-toggle="modal"
-                                    data-bs-target="#confirmarEliminarModal" title="Eliminar">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none"
+                            <!-- Botón dinámico “Eliminar” -->
+                            <button
+                                    type="button"
+                                    class="btn btn-outline-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmarEliminarModal"
+                                    data-url="{% url 'admin_panel:eliminar_principio' principio.id %}"
+                                    {% comment %}
+                                        escapejs guarda caracteres especiales (tildes, símbolos...)
+                                    {% endcomment %}
+                                    data-title="{{ principio.titulo|escapejs }}"
+                                    title="Eliminar">
+                                <!-- icono trash -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                      stroke="currentColor" stroke-width="1" stroke-linecap="round"
                                      stroke-linejoin="round"
-                                     class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                     class="icon icon-tabler icons-tabler-trash">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                     <path d="M4 7l16 0"/>
                                     <path d="M10 11l0 6"/>
@@ -81,19 +92,60 @@
             </tbody>
         </table>
     </div>
-{% endblock %}
 
+    {# Modal único de confirmación de borrado #}
+    <div class="modal fade" id="confirmarEliminarModal" tabindex="-1"
+         aria-labelledby="confirmarEliminarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="#" id="delete-form">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmarEliminarModalLabel">Confirmar eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Estás seguro de que quieres eliminar el principio
+                        "<strong id="delete-item-title"></strong>"?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
 {% block scripts %}
     <script src="{% static 'js/toast.min.js' %}"></script>
     <script src="{% static 'js/sortable.min.js' %}"></script>
     <script src="{% static 'js/custom-sortable.js' %}"></script>
     <script>
-      customSortable({
-        tbody: document.querySelector('#tabla-principios tbody'),
-        modelName: 'principios',
-        endpoint: '{% url 'admin_panel:actualizar_orden' %}',
-        csrfToken: '{{ csrf_token }}'
-      });
+        // Inicializa el drag & drop
+        customSortable({
+            tbody: document.querySelector('#tabla-principios tbody'),
+            modelName: 'principios',
+            endpoint: '{% url "admin_panel:actualizar_orden" %}',
+            csrfToken: '{{ csrf_token }}'
+        });
+
+        // ------------------------------------------------------------------------
+        // Este script recoge los datos del "<tr>" del registro y se los pasa al modal
+        const confirmarModal = document.getElementById('confirmarEliminarModal');
+        confirmarModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const url = button.getAttribute('data-url');
+            const titulo = button.getAttribute('data-title');
+
+            const form = this.querySelector('#delete-form');
+            const titleEl = this.querySelector('#delete-item-title');
+
+            form.action = url;
+            titleEl.textContent = titulo;
+        });
     </script>
 {% endblock %}

@@ -10,6 +10,24 @@ from elama.models import Estrategia, Principio, Descriptor
 @staff_member_required
 @require_POST  # asegura que solo aceptemos peticiones POST.
 def actualizar_orden(request: HttpRequest):
+    """
+    Vista que actualiza el orden (campo `step`) de objetos Estrategia, Principio o Descriptor
+    según un array de IDs recibido vía POST en formato JSON.
+
+    Solo permite peticiones POST y usuarios staff autenticados.
+
+    El JSON recibido debe tener una clave correspondiente a uno de los modelos
+    ('estrategias', 'principios' o 'descriptores') y un array de IDs en el orden deseado.
+    Primero pone todos los `step` a null y luego reasigna valores secuenciales.
+
+    Args:
+        request (HttpRequest): Objeto HttpRequest que contiene el cuerpo JSON
+        con las claves y el nuevo orden de los IDs.
+
+    Returns:
+        JsonResponse: Respuesta con estado 'ok' si se procesó correctamente,
+        o 'invalid method' con código 405 si no se recibió una clave válida.
+    """
     # Parseamos el cuerpo de la petición de JSON a diccionario de Python
     data = json.loads(request.body)
 

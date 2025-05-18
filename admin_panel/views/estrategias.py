@@ -16,39 +16,60 @@ links = [
 ]
 
 
-# Vista para listar todas las estrategias disponibles
 @staff_member_required
 def estrategia_list(request: HttpRequest):
-    # Consulta todas las estrategias ordenadas por 'step'
+    """
+    Vista protegida que muestra la lista de estrategias ordenadas por su campo `step`.
+
+    Solo accesible a usuarios con permisos de staff.
+
+    Args:
+        request (HttpRequest): Objeto HttpRequest de la petición entrante.
+
+    Returns:
+        HttpResponse: Respuesta renderizada con la plantilla 'admin_panel/estrategia_list.html'
+        mostrando la lista de estrategias y los enlaces de navegación.
+    """
     estrategias = Estrategia.objects.all().order_by('step')
 
-    # Renderiza la plantilla con la lista de estrategias y enlaces
     return render(request, 'admin_panel/estrategia_list.html', {
         'estrategias': estrategias,
         'links': links,
     })
 
 
-# Vista para crear o editar una estrategia
 @staff_member_required
 def detalle_estrategia(request: HttpRequest, estrategia_id: int = None):
+    """
+    Vista protegida para crear o editar una estrategia.
+
+    Si se recibe un estrategia_id, se edita la estrategia correspondiente.
+    Si no, se crea una nueva.
+
+    Solo accesible a usuarios con permisos de staff.
+
+    Args:
+        request (HttpRequest): Objeto HttpRequest de la petición entrante.
+        estrategia_id (int, optional): ID de la estrategia a editar. Por defecto None (crear).
+
+    Returns:
+        HttpResponse: Respuesta renderizada con la plantilla 'admin_panel/detalle_estrategia.html'
+        mostrando el formulario de edición o creación.
+    """
     estrategia = Estrategia.objects.get(pk=estrategia_id) if estrategia_id else None
 
-    # Si el formulario se envía (POST)
     if request.method == 'POST':
-        form = EstrategiaForm(request.POST, instance=estrategia)  # Crea o actualiza
+        form = EstrategiaForm(request.POST, instance=estrategia)
 
         if form.is_valid():
-            form.save()  # Guarda los cambios o crea nueva estrategia
-            if not estrategia_id:  # Crear (estrategia no existe)
-                return redirect('admin_panel:estrategias')  # Redirige a la lista
-            # Actualizar datos de descriptor (descriptor existe)
+            form.save()
+            if not estrategia_id:
+                return redirect('admin_panel:estrategias')
             messages.success(request, '¡Estrategia actualizada con éxito!')
 
     else:
-        form = EstrategiaForm(instance=estrategia)  # Formulario vacío o con datos
+        form = EstrategiaForm(instance=estrategia)
 
-    # Renderiza la plantilla de detalle (crear o editar) con el formulario y enlaces
     return render(request, 'admin_panel/detalle_estrategia.html', {
         'estrategia': estrategia,
         'form': form,
@@ -56,11 +77,22 @@ def detalle_estrategia(request: HttpRequest, estrategia_id: int = None):
     })
 
 
-# Vista para eliminar una estrategia (solo acepta POST)
 @staff_member_required
 @require_POST
 def eliminar_estrategia(_, estrategia_id: int):
-    estrategia = Estrategia.objects.get(pk=estrategia_id)  # Busca la estrategia
+    """
+    Vista protegida para eliminar una estrategia.
+
+    Solo acepta peticiones POST y requiere permisos de staff.
+
+    Args:
+        _ (HttpRequest): Objeto HttpRequest (no se usa).
+        estrategia_id (int): ID de la estrategia a eliminar.
+
+    Returns:
+        HttpResponseRedirect: Redirige a la lista de estrategias tras eliminar.
+    """
+    estrategia = Estrategia.objects.get(pk=estrategia_id)
     if estrategia:
-        estrategia.delete()  # Elimina de la base de datos
-    return redirect('admin_panel:estrategias')  # Redirige a la lista de estrategias
+        estrategia.delete()
+    return redirect('admin_panel:estrategias')

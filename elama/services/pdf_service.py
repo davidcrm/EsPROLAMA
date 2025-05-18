@@ -30,10 +30,20 @@ class PdfService:
         <html>
         <head>
             <style> 
-                ul,
-                ul ul {
+                ul, ul ul {
                     list-style-type: none; 
-                } 
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                .header h2 {
+                    font-size: 24px;
+                }
+                .header p {
+                    font-size: 16px;
+                    margin: 5px 0;
+                }
             </style>
         </head>
         <body>
@@ -41,18 +51,17 @@ class PdfService:
 
         # Cabecera con información del tipo de autoevaluación
         html_string += f"""
-        <div style="align:center;">
+        <div class="header">
         """
         if autoevaluacion.grupo:
-            # Si es autoevaluación grupal, mostrar nombre del grupo
-            html_string += f"""<h2>AUTOEVALUACION GRUPAL</h2>
-             <p>Grupo: <strong>{autoevaluacion.grupo.nombre}</strong></p>
+            html_string += f"""
+                <h2>AUTOEVALUACION GRUPAL</h2>
+                <p>Grupo: <strong>{autoevaluacion.grupo.nombre}</strong></p>
             """
         else:
-            # Autoevaluación individual, mostrar evaluador
             html_string += f"""
-            <h2>AUTOEVALUACION INDIVIDUAL</h2>
-            <p>Evaluador: <strong>{user.username}</strong></p>
+                <h2>AUTOEVALUACION INDIVIDUAL</h2>
+                <p>Evaluador: <strong>{user.username}</strong></p>
             """
 
         # Fecha actual formateada

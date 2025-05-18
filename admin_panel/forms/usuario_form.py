@@ -57,6 +57,8 @@ class UsuarioForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             self.fields.pop('password')
 
+
+    # Sobreescribimos el métod0 save del formulario
     def save(self, commit=True):
         """
         Sobreescribe el método save para personalizar la creación/edición de un usuario.
@@ -92,6 +94,8 @@ class UsuarioForm(forms.ModelForm):
         username = username.encode('ascii', 'ignore').decode('utf-8')
 
         user.username = username
+
+        # Lo guardamos
 
         password = self.cleaned_data.get('password')
         if password:

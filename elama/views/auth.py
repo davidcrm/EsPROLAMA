@@ -2,17 +2,20 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.http import HttpRequest
 
-def redirect_to_login(_):
+def redirect_to_login(request: HttpRequest):
     """
     Redirige a la página de login.
 
     Args:
-        _: No se usa, puede ser cualquier objeto.
+        request (HttpRequest): Petición HTTP que contiene la sesión del usuario.
 
     Returns:
         HttpResponseRedirect: Redirección a la ruta 'users/login'.
     """
-    return redirect('users/login')
+    if request.user.is_authenticated:
+        return redirect('home/')
+    else:
+        return redirect('users/login')
 
 
 def sign_out(request: HttpRequest):

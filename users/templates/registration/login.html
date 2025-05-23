@@ -3,6 +3,8 @@
 
 {% block content %}
 
+    {{ user|safe}}
+
     {% if  user.is_active %}
          {% block styles %}
            <meta http-equiv="refresh" content="0; url=/home">

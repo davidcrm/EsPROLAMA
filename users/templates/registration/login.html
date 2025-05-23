@@ -2,29 +2,36 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
-    <h1 class="text-center">
-        Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
-        Migrantes Adultos (EsPROLAMA)
-    </h1>
 
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-4">
-                <form action="{% url 'users:login' %}" method="post" class="form">
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-                    <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-200-hover small opacity-75"
-                       href="{% url 'password_reset' %}">
-                        Cambiar contraseña
-                    </a>
-                    <div class="mt-2" style="display: flex; justify-content: center; align-items: center">
-                        {% bootstrap_button button_type="submit" content="Iniciar sesión" %}
-                    </div>
+    {% if  user.is_active %}
+         {% block styles %}
+           <meta http-equiv="refresh" content="0; url=/home">
+         {% endblock %}
+    {% else %}
+        <h1 class="text-center">
+            Herramienta para la autoevaluación y el desarrollo de Programas de Español como Lengua Adicional para
+            Migrantes Adultos (EsPROLAMA)
+        </h1>
 
-                    <input type="hidden" name="next" value="{% url 'elama:home' %}"/>
-                </form>
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-4">
+                    <form action="{% url 'users:login' %}" method="post" class="form">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-200-hover small opacity-75"
+                           href="{% url 'password_reset' %}">
+                            Cambiar contraseña
+                        </a>
+                        <div class="mt-2" style="display: flex; justify-content: center; align-items: center">
+                            {% bootstrap_button button_type="submit" content="Iniciar sesión" %}
+                        </div>
+
+                        <input type="hidden" name="next" value="{% url 'elama:home' %}"/>
+                    </form>
+                </div>
             </div>
-        </div>
 
-    </div>
+        </div>
+    {% endif %}
 {% endblock content %}
